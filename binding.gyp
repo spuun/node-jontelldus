@@ -3,11 +3,12 @@
     {
     "target_name": "jontelldus",
     "sources": [ 
-		"src/JonTelldus.cc",
-		"src/QueueInvoker.cc",
-		"src/RawDeviceEventCallbackInvoker.cc",
-    "src/GetDevicesWorker.cc"
-	],
+  		"src/JonTelldus.cc",
+  		"src/QueueInvoker.cc",
+      "src/SensorEventCallbackInvoker.cc",
+  		"src/RawDeviceEventCallbackInvoker.cc",
+      "src/GetDevicesWorker.cc"
+  	],
     "conditions": [
         ['OS=="mac"', {
             'include_dirs': [

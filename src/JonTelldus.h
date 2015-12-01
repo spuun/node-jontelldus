@@ -46,19 +46,19 @@ namespace JonTelldus {
 	Nan::Maybe<bool> Set(
 		v8::Local<v8::Object> target,
 		const char *propertyName,
-		int numberValue) {
+		const char *stringValue) {
 		return Nan::Set(target, 
 			Nan::New<v8::String>(propertyName).ToLocalChecked(), 
-			Nan::New<v8::Number>(numberValue));
+			Nan::New<v8::String>(stringValue).ToLocalChecked());
 	}
 
 	Nan::Maybe<bool> Set(
 		v8::Local<v8::Object> target,
 		const char *propertyName,
-		const char *stringValue) {
+		int numberValue) {
 		return Nan::Set(target, 
 			Nan::New<v8::String>(propertyName).ToLocalChecked(), 
-			Nan::New<v8::String>(stringValue).ToLocalChecked());
+			Nan::New<v8::Number>(numberValue));
 	}
 
 }

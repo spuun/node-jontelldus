@@ -18,7 +18,8 @@ telldus.getDevices(devices =>
 | getDevices(callback) | get all devices |
 | turnOn(deviceId) | send on signal to device | 
 | turnOff(deviceId) | send off signal to device |
-| addRawDeviceEventListener(callback) | add a raw deveice event listener |
+| addRawDeviceEventListener(callback) | add a raw device event listener |
+| addSensorEventListener(callback) | add a sensor event listener |
 
 ## Properties
 | property | description |
