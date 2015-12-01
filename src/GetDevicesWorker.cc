@@ -1,6 +1,9 @@
 #include "GetDevicesWorker.h"
 
 #include <telldus-core.h>
+#include <algorithm>
+
+namespace JonTelldus {
 
 GetDevicesWorker::GetDevicesWorker(Nan::Callback *callback)
 	: Nan::AsyncWorker(callback) {};
@@ -30,23 +33,20 @@ void GetDevicesWorker::Execute() {
 void GetDevicesWorker::HandleOKCallback() {
 	v8::Local<v8::Array> ret = Nan::New<v8::Array>();
 
-    std::list<Device*>::iterator it;
-    int i = 0;
-    for (it = _devices.begin(); it != _devices.end(); ++it) {
-    	v8::Local<v8::Object> deviceObj = Nan::New<v8::Object>();
-    	Nan::Set(deviceObj, Nan::New<v8::String>("id").ToLocalChecked(),
-    		Nan::New<v8::Number>((*it)->id));
-    	Nan::Set(deviceObj, Nan::New<v8::String>("name").ToLocalChecked(),
-    		Nan::New<v8::String>((*it)->name).ToLocalChecked());
-    	Nan::Set(deviceObj, Nan::New<v8::String>("protocol").ToLocalChecked(),
-    		Nan::New<v8::String>((*it)->protocol).ToLocalChecked());
-    	Nan::Set(deviceObj, Nan::New<v8::String>("model").ToLocalChecked(),
-    		Nan::New<v8::String>((*it)->model).ToLocalChecked());
-    	Nan::Set(ret, i++, deviceObj);
-    	delete *it;
-    }
+    std::for_each(_devices.begin(), _devices.end(), [ret](Device* device) {
+        v8::Local<v8::Object> deviceObj = Nan::New<v8::Object>();
+        Set(deviceObj, "id", device->id);
+        Set(deviceObj, "name", device->name.c_str());
+        Set(deviceObj, "protocol", device->protocol.c_str());
+        Set(deviceObj, "model", device->model.c_str());
+        Set(ret, ret->Length(), deviceObj);
+        delete device;
+    });
+
     v8::Handle<v8::Value> argv[] = {
       ret
     };
     callback->Call(1, argv);
+}
+
 }

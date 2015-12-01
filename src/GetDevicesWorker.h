@@ -5,6 +5,10 @@
 #include <nan.h>
 #include <list>
 #include <string>
+#include "JonTelldus.h"
+
+namespace JonTelldus {
+	
 struct Device {
 	int id;
 	std::string name;
@@ -21,4 +25,5 @@ class GetDevicesWorker : public Nan::AsyncWorker {
 		void HandleOKCallback();
 };
 
+}
 #endif

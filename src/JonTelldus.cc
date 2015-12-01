@@ -23,6 +23,7 @@ namespace JonTelldus {
   using v8::Persistent;
   using v8::Function;
 
+
   void rawDeviceEventCallback(const char* data, int controllerId, int callbackId, void *context) {
     Nan::Callback *callback = static_cast<Nan::Callback *>(context);
 		QueueCallback(new RawDeviceEventCallbackInvoker(callback, controllerId, data));
@@ -73,30 +74,20 @@ namespace JonTelldus {
 
 NAN_MODULE_INIT(Init) {
   tdInit();
-  Nan::Set(target, Nan::New<String>("getDevices").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(getDevices)).ToLocalChecked());
-  Nan::Set(target, Nan::New<String>("turnOn").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(turnOn)).ToLocalChecked());
-  Nan::Set(target, Nan::New<String>("turnOff").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
-  Nan::Set(target, Nan::New<String>("addRawDeviceEventListener").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
+  Set(target, "getDevices", Nan::GetFunction(Nan::New<FunctionTemplate>(getDevices)).ToLocalChecked());
+  Set(target, "turnOn", Nan::GetFunction(Nan::New<FunctionTemplate>(turnOn)).ToLocalChecked());
+  Set(target, "turnOff",Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
+  Set(target, "addRawDeviceEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
 	// data type enum
-	std::map<std::string, int> datatypes;
-	datatypes["Temperature"] = TELLSTICK_TEMPERATURE;
-	datatypes["Humidity"] = TELLSTICK_HUMIDITY;
-	datatypes["RainTotal"] = TELLSTICK_RAINTOTAL;
-	datatypes["RainRate"] = TELLSTICK_RAINRATE;
-	datatypes["WindDirection"] = TELLSTICK_WINDDIRECTION;
-	datatypes["WindAverage"] = TELLSTICK_WINDAVERAGE;
-	datatypes["WindGust"] = TELLSTICK_WINDGUST;
-
 	v8::Local<v8::Object> datatypesObj = Nan::New<v8::Object>();
-	for (auto it = datatypes.begin(); it != datatypes.end(); ++it){
-		Nan::Set(datatypesObj, Nan::New<v8::String>(it->first.c_str()).ToLocalChecked(),
-			Nan::New<Number>(it->second));
-	}
-	Nan::Set(target, Nan::New<v8::String>("sensorValueType").ToLocalChecked(), datatypesObj);
+	Set(datatypesObj, "Temperature", TELLSTICK_TEMPERATURE);
+	Set(datatypesObj, "Humidity", TELLSTICK_HUMIDITY);
+	Set(datatypesObj, "RainTotal", TELLSTICK_RAINTOTAL);
+	Set(datatypesObj, "RainRate", TELLSTICK_RAINRATE);
+	Set(datatypesObj, "WindDirection", TELLSTICK_WINDDIRECTION);
+	Set(datatypesObj, "WindAverage", TELLSTICK_WINDAVERAGE);
+	Set(datatypesObj, "WindGust", TELLSTICK_WINDGUST);
+	Set(target, "sensorValueType", datatypesObj);
  }
 NODE_MODULE(jontelldus, Init)
 }
