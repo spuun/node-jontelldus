@@ -1,10 +1,10 @@
 
 #include <string>
+#include <map>
 
 #include "JonTelldus.h"
 #include "QueueInvoker.h"
 #include "RawDeviceEventCallbackInvoker.h"
-#include "RawDeviceEventWorker.h"
 #include "GetDevicesWorker.h"
 
 namespace JonTelldus {
@@ -28,7 +28,7 @@ namespace JonTelldus {
 		QueueCallback(new RawDeviceEventCallbackInvoker(callback, controllerId, data));
   }
 
-  NAN_METHOD(registerRawDeviceEvent) {
+  NAN_METHOD(addRawDeviceEventListener) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
       Nan::ThrowSyntaxError("argument must be function");
        return;
@@ -79,8 +79,24 @@ NAN_MODULE_INIT(Init) {
     Nan::GetFunction(Nan::New<FunctionTemplate>(turnOn)).ToLocalChecked());
   Nan::Set(target, Nan::New<String>("turnOff").ToLocalChecked(),
     Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
-  Nan::Set(target, Nan::New<String>("registerRawDeviceEvent").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(registerRawDeviceEvent)).ToLocalChecked());
+  Nan::Set(target, Nan::New<String>("addRawDeviceEventListener").ToLocalChecked(),
+    Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
+	// data type enum
+	std::map<std::string, int> datatypes;
+	datatypes["Temperature"] = TELLSTICK_TEMPERATURE;
+	datatypes["Humidity"] = TELLSTICK_HUMIDITY;
+	datatypes["RainTotal"] = TELLSTICK_RAINTOTAL;
+	datatypes["RainRate"] = TELLSTICK_RAINRATE;
+	datatypes["WindDirection"] = TELLSTICK_WINDDIRECTION;
+	datatypes["WindAverage"] = TELLSTICK_WINDAVERAGE;
+	datatypes["WindGust"] = TELLSTICK_WINDGUST;
+
+	v8::Local<v8::Object> datatypesObj = Nan::New<v8::Object>();
+	for (auto it = datatypes.begin(); it != datatypes.end(); ++it){
+		Nan::Set(datatypesObj, Nan::New<v8::String>(it->first.c_str()).ToLocalChecked(),
+			Nan::New<Number>(it->second));
+	}
+	Nan::Set(target, Nan::New<v8::String>("sensorValueType").ToLocalChecked(), datatypesObj);
  }
 NODE_MODULE(jontelldus, Init)
 }

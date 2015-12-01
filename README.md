@@ -11,3 +11,18 @@ var telldus = require('node-jontelldus');
 telldus.getDevices(devices => 
 	devices.forEach(device => console.log(device)));
 ```
+
+## Methods
+| method | description |
+|--------|-------------|
+| getDevices(callback) | get all devices |
+| turnOn(deviceId) | send on signal to device | 
+| turnOff(deviceId) | send off signal to device |
+| addRawDeviceEventListener(callback) | add a raw deveice event listener |
+
+## Properties
+| property | description |
+|----------|-------------|
+| sensorValueType | enum with sensor value types (Temperature, Humidity, RainTotal, RainRate, WindDirection, WindAverage, WindGust) |
+
+
