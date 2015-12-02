@@ -24,6 +24,46 @@ namespace JonTelldus {
   using v8::Persistent;
   using v8::Function;
 
+  struct keyvalue {
+    const char *key;
+    int value;
+  };
+
+  struct keyvalue sensorValueTypes[] = {
+    {"Temperature", TELLSTICK_TEMPERATURE },
+    {"Humidity", TELLSTICK_HUMIDITY },
+    {"RainTotal", TELLSTICK_RAINTOTAL },
+    {"RainRate", TELLSTICK_RAINRATE },
+    {"WindDirection", TELLSTICK_WINDDIRECTION },
+    {"WindAverage", TELLSTICK_WINDAVERAGE },
+    {"WindGust", TELLSTICK_WINDGUST }
+  };
+  struct keyvalue methods[] = {
+    { "TurnOn", TELLSTICK_TURNON },
+    { "TurnOff", TELLSTICK_TURNOFF },
+    { "Bell", TELLSTICK_BELL },
+    { "Toggle", TELLSTICK_TOGGLE },
+    { "Dim", TELLSTICK_DIM },
+    { "Execute", TELLSTICK_EXECUTE },
+    { "Up", TELLSTICK_UP},
+    { "Down", TELLSTICK_DOWN },
+    { "Stop", TELLSTICK_STOP },
+  };
+  struct keyvalue errorCodes[] = {
+    { "NoError", TELLSTICK_SUCCESS },
+    { "NotFound", TELLSTICK_ERROR_NOT_FOUND }, 
+    { "PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED },
+    { "DeviceNotFound", TELLSTICK_ERROR_DEVICE_NOT_FOUND },
+    { "MethodNotSupported", TELLSTICK_ERROR_METHOD_NOT_SUPPORTED },
+    { "Communication", TELLSTICK_ERROR_COMMUNICATION },
+    { "ConnectingService", TELLSTICK_ERROR_CONNECTING_SERVICE },
+    { "UnknownResponse", TELLSTICK_ERROR_UNKNOWN_RESPONSE },
+    { "Syntax", TELLSTICK_ERROR_SYNTAX },
+    { "BrokenPipe", TELLSTICK_ERROR_BROKEN_PIPE },
+    { "CommunicatingService", TELLSTICK_ERROR_COMMUNICATING_SERVICE },
+    { "Unknown", TELLSTICK_ERROR_UNKNOWN }
+  };
+
 #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
     if (info.Length() < 2) { \
@@ -119,41 +159,19 @@ namespace JonTelldus {
     // "ENUMS"
     v8::PropertyAttribute readOnlyDontDelete = (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete);
     // data type enum
-    v8::Local<v8::Object> datatypesObj = Nan::New<v8::Object>();
-    Set(datatypesObj, "Temperature", TELLSTICK_TEMPERATURE, readOnlyDontDelete);
-    Set(datatypesObj, "Humidity", TELLSTICK_HUMIDITY, readOnlyDontDelete);
-    Set(datatypesObj, "RainTotal", TELLSTICK_RAINTOTAL, readOnlyDontDelete);
-    Set(datatypesObj, "RainRate", TELLSTICK_RAINRATE, readOnlyDontDelete);
-    Set(datatypesObj, "WindDirection", TELLSTICK_WINDDIRECTION, readOnlyDontDelete);
-    Set(datatypesObj, "WindAverage", TELLSTICK_WINDAVERAGE, readOnlyDontDelete);
-    Set(datatypesObj, "WindGust", TELLSTICK_WINDGUST, readOnlyDontDelete);
-    Set(target, "sensorValueType", datatypesObj, readOnlyDontDelete); 
+    v8::Local<v8::Object> sensorTypesObj = Nan::New<v8::Object>();
+    for (auto& sensorValueType: sensorValueTypes)
+      Set(sensorTypesObj, sensorValueType.key, sensorValueType.value, readOnlyDontDelete);
+    Set(target, "sensorValueType", sensorTypesObj, readOnlyDontDelete); 
     // methods enum
     v8::Local<v8::Object> methodsObj = Nan::New<v8::Object>();
-    Set(methodsObj, "TurnOn", TELLSTICK_TURNON, readOnlyDontDelete);
-    Set(methodsObj, "TurnOff", TELLSTICK_TURNOFF, readOnlyDontDelete);
-    Set(methodsObj, "Bell", TELLSTICK_BELL, readOnlyDontDelete);
-    Set(methodsObj, "Toggle", TELLSTICK_TOGGLE, readOnlyDontDelete);
-    Set(methodsObj, "Dim", TELLSTICK_DIM, readOnlyDontDelete);
-    Set(methodsObj, "Execute", TELLSTICK_EXECUTE, readOnlyDontDelete);
-    Set(methodsObj, "Up", TELLSTICK_UP, readOnlyDontDelete);
-    Set(methodsObj, "Down", TELLSTICK_DOWN, readOnlyDontDelete);
-    Set(methodsObj, "Stop", TELLSTICK_STOP, readOnlyDontDelete);
+    for (auto& method: methods) 
+      Set(methodsObj, method.key, method.value, readOnlyDontDelete);
     Set(target, "method", methodsObj, readOnlyDontDelete);
     // error codes
     v8::Local<v8::Object> errorObj = Nan::New<v8::Object>();
-    Set(errorObj, "NoError", TELLSTICK_SUCCESS, readOnlyDontDelete);
-    Set(errorObj, "NotFound", TELLSTICK_ERROR_NOT_FOUND, readOnlyDontDelete);
-    Set(errorObj, "PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED, readOnlyDontDelete);
-    Set(errorObj, "DeviceNotFound", TELLSTICK_ERROR_DEVICE_NOT_FOUND, readOnlyDontDelete);
-    Set(errorObj, "MethodNotSupported", TELLSTICK_ERROR_METHOD_NOT_SUPPORTED, readOnlyDontDelete);
-    Set(errorObj, "Communication", TELLSTICK_ERROR_COMMUNICATION, readOnlyDontDelete);
-    Set(errorObj, "ConnectingService", TELLSTICK_ERROR_CONNECTING_SERVICE, readOnlyDontDelete);
-    Set(errorObj, "UnknownResponse", TELLSTICK_ERROR_UNKNOWN_RESPONSE, readOnlyDontDelete);
-    Set(errorObj, "Syntax", TELLSTICK_ERROR_SYNTAX, readOnlyDontDelete);
-    Set(errorObj, "BrokenPipe", TELLSTICK_ERROR_BROKEN_PIPE, readOnlyDontDelete);
-    Set(errorObj, "CommunicatingService", TELLSTICK_ERROR_COMMUNICATING_SERVICE, readOnlyDontDelete);
-    Set(errorObj, "Unknown", TELLSTICK_ERROR_UNKNOWN, readOnlyDontDelete);
+    for (auto& errorCode: errorCodes)
+      Set(errorObj, errorCode.key, errorCode.value);
     Set(target, "errorCode", errorObj, readOnlyDontDelete);
   }
   NODE_MODULE(jontelldus, Init)
