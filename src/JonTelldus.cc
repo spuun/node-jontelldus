@@ -5,6 +5,7 @@
 #include "QueueInvoker.h"
 #include "RawDeviceEventCallbackInvoker.h"
 #include "SensorEventCallbackInvoker.h"
+#include "DeviceEventCallbackInvoker.h"
 #include "GetDevicesWorker.h"
 #include "IntIdWorker.h"
 
@@ -64,6 +65,10 @@ namespace JonTelldus {
     { "Unknown", TELLSTICK_ERROR_UNKNOWN }
   };
 
+#define ADD_METHOD(target,name) \
+  Set(target, #name, Nan::GetFunction(Nan::New<FunctionTemplate>(name)).ToLocalChecked());
+
+
 #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
     if (info.Length() < 2) { \
@@ -83,7 +88,25 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined()); \
   } 
 
+  void deviceEventCallback(
+      int deviceId,
+      int method,
+      const char *data,
+      int callbackId,
+      void *context) {
+    Nan::Callback *callback = static_cast<Nan::Callback *>(context);
+    QueueCallback(new DeviceEventCallbackInvoker(callback, deviceId, method, data));
+  }
 
+  NAN_METHOD(addDeviceEventListener) {
+    if (info.Length() < 1 || !info[0]->IsFunction()) {
+      Nan::ThrowSyntaxError("argument must be function");
+      return;
+    }
+    Nan::Callback *callback = new Nan::Callback(info[0].As<Function>());
+    tdRegisterDeviceEvent(&deviceEventCallback, callback);
+    info.GetReturnValue().Set(Nan::Undefined());
+  }
   void sensorEventCallback(
       const char *protocol,
       const char *model,
@@ -144,17 +167,18 @@ namespace JonTelldus {
 
   NAN_MODULE_INIT(Init) {
     tdInit();
-    Set(target, "getDevices", Nan::GetFunction(Nan::New<FunctionTemplate>(getDevices)).ToLocalChecked());
-    Set(target, "turnOn", Nan::GetFunction(Nan::New<FunctionTemplate>(turnOn)).ToLocalChecked());
-    Set(target, "turnOff",Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
-    Set(target, "bell",Nan::GetFunction(Nan::New<FunctionTemplate>(bell)).ToLocalChecked());
-    Set(target, "up",Nan::GetFunction(Nan::New<FunctionTemplate>(up)).ToLocalChecked());
-    Set(target, "down",Nan::GetFunction(Nan::New<FunctionTemplate>(down)).ToLocalChecked());
-    Set(target, "execute",Nan::GetFunction(Nan::New<FunctionTemplate>(execute)).ToLocalChecked());
-    Set(target, "stop",Nan::GetFunction(Nan::New<FunctionTemplate>(stop)).ToLocalChecked());
-    Set(target, "learn",Nan::GetFunction(Nan::New<FunctionTemplate>(learn)).ToLocalChecked());
-    Set(target, "addRawDeviceEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
-    Set(target, "addSensorEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addSensorEventListener)).ToLocalChecked());
+    ADD_METHOD(target, getDevices);
+    ADD_METHOD(target, turnOn);
+    ADD_METHOD(target, turnOff);
+    ADD_METHOD(target, bell);
+    ADD_METHOD(target, up);
+    ADD_METHOD(target, down);
+    ADD_METHOD(target, execute);
+    ADD_METHOD(target, stop);
+    ADD_METHOD(target, learn);
+    ADD_METHOD(target, addRawDeviceEventListener);
+    ADD_METHOD(target, addSensorEventListener);
+    ADD_METHOD(target, addDeviceEventListener);
 
     // "ENUMS"
     v8::PropertyAttribute readOnlyDontDelete = (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete);

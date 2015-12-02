@@ -5,8 +5,9 @@
     "sources": [ 
   		"src/JonTelldus.cc",
   		"src/QueueInvoker.cc",
-      "src/SensorEventCallbackInvoker.cc",
   		"src/RawDeviceEventCallbackInvoker.cc",
+      "src/SensorEventCallbackInvoker.cc",
+      "src/DeviceEventCallbackInvoker.cc",
       "src/GetDevicesWorker.cc",
 			"src/IntIdWorker.cc"
   	],
