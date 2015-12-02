@@ -112,6 +112,18 @@ NAN_MODULE_INIT(Init) {
 	Set(datatypesObj, "WindAverage", TELLSTICK_WINDAVERAGE);
 	Set(datatypesObj, "WindGust", TELLSTICK_WINDGUST);
 	Set(target, "sensorValueType", datatypesObj);
- }
+	// methods enum
+	v8::Local<v8::Object> methodsObj = Nan::New<v8::Object>();
+	Set(methodsObj, "TurnOn", TELLSTICK_TURNON);
+	Set(methodsObj, "TurnOff", TELLSTICK_TURNOFF);
+	Set(methodsObj, "Bell", TELLSTICK_BELL);
+	Set(methodsObj, "Toggle", TELLSTICK_TOGGLE);
+	Set(methodsObj, "Dim", TELLSTICK_DIM);
+	Set(methodsObj, "Execute", TELLSTICK_EXECUTE);
+	Set(methodsObj, "Up", TELLSTICK_UP);
+	Set(methodsObj, "Down", TELLSTICK_DOWN);
+	Set(methodsObj, "Stop", TELLSTICK_STOP);
+	Set(target, "method", methodsObj);
+}
 NODE_MODULE(jontelldus, Init)
 }

@@ -25,5 +25,5 @@ telldus.getDevices(devices =>
 | property | description |
 |----------|-------------|
 | sensorValueType | enum with sensor value types (Temperature, Humidity, RainTotal, RainRate, WindDirection, WindAverage, WindGust) |
-
+| method | enum with methods (TurnOn, TurnOff, Bell, Toggle, Dim, Execute, Up, Down, Stop) |
 
