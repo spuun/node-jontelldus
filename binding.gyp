@@ -7,7 +7,8 @@
   		"src/QueueInvoker.cc",
       "src/SensorEventCallbackInvoker.cc",
   		"src/RawDeviceEventCallbackInvoker.cc",
-      "src/GetDevicesWorker.cc"
+      "src/GetDevicesWorker.cc",
+			"src/IntIdWorker.cc"
   	],
     "conditions": [
         ['OS=="mac"', {

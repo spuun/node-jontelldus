@@ -15,11 +15,17 @@ telldus.getDevices(devices =>
 ## Methods
 | method | description |
 |--------|-------------|
-| getDevices(callback) | get all devices |
-| turnOn(deviceId) | send on signal to device | 
-| turnOff(deviceId) | send off signal to device |
-| addRawDeviceEventListener(callback) | add a raw device event listener |
-| addSensorEventListener(callback) | add a sensor event listener |
+| getDevices(callback(devices)) | get all devices |
+| turnOn(deviceId, callback(errorCode)) | send on command to device | 
+| turnOff(deviceId, callback(errorCode)) | send off command to device |
+| up(deviceId, callback(errorCode)) | send up command to device |
+| down(deviceId, callback(errorCode)) | send down command to device |
+| bell(deviceId, callback(errorCode)) | send bell command to device |
+| execute(deviceId, callback(errorCode)) | send execute command to device |
+| stop(deviceId, callback(errorCode)) | send stop command to device |
+| learn(deviceId, callback(errorCode)) | send learn command for device |
+| addRawDeviceEventListener(callback(controllerId, data)) | add a raw device event listener |
+| addSensorEventListener(callback(sensorEventData)) | add a sensor event listener |
 
 ## Properties
 | property | description |

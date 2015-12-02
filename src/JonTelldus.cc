@@ -7,6 +7,7 @@
 #include "RawDeviceEventCallbackInvoker.h"
 #include "SensorEventCallbackInvoker.h"
 #include "GetDevicesWorker.h"
+#include "IntIdWorker.h"
 
 namespace JonTelldus {
 
@@ -23,6 +24,26 @@ namespace JonTelldus {
   using v8::Exception;
   using v8::Persistent;
   using v8::Function;
+
+	#define INT_ID_METHOD(name, fn) \
+		NAN_METHOD(name) { \
+				if (info.Length() < 2) { \
+					Nan::ThrowSyntaxError("Missing arguments. Id and callback needed."); \
+					return; \
+				} \
+				if (!info[0]->IsInt32()) { \
+					Nan::ThrowSyntaxError("Id must be integer"); \
+					return; \
+				} \
+				if (!info[1]->IsFunction()) { \
+					Nan::ThrowSyntaxError("Callback must be function, duh"); \
+					return; \
+				} \
+				Nan::Callback *callback = new Nan::Callback(info[1].As<Function>()); \
+				Nan::AsyncQueueWorker(new IntIdWorker(callback, fn, info[0]->IntegerValue())); \
+				info.GetReturnValue().Set(Nan::Undefined()); \
+			} 
+
 
   void sensorEventCallback(
     const char *protocol,
@@ -72,39 +93,15 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
-  NAN_METHOD(turnOn) {
-    if (info.Length() < 1) {
-        Nan::ThrowSyntaxError("Missing id");
-        return;
-    }
-    if (!info[0]->IsInt32()) {
-      Nan::ThrowTypeError("Id must be integer");
-      return;
-    }
-    info.GetReturnValue().Set(Nan::New<Number>(tdTurnOn(info[0]->IntegerValue())));
-  }
-  NAN_METHOD(turnOff) {
-    if (info.Length() < 1) {
-        Nan::ThrowSyntaxError("Missing id");
-        return;
-    }
-    if (!info[0]->IsInt32()) {
-      Nan::ThrowTypeError("Id must be integer");
-      return;
-    }
-    info.GetReturnValue().Set(Nan::New<Number>(tdTurnOff(info[0]->IntegerValue())));
-  }
-	NAN_METHOD(bell) {
-    if (info.Length() < 1) {
-        Nan::ThrowSyntaxError("Missing id");
-        return;
-    }
-    if (!info[0]->IsInt32()) {
-      Nan::ThrowTypeError("Id must be integer");
-      return;
-    }
-    info.GetReturnValue().Set(Nan::New<Number>(tdBell(info[0]->IntegerValue())));
-  }
+
+	INT_ID_METHOD(up, tdUp);
+	INT_ID_METHOD(down, tdDown);
+	INT_ID_METHOD(bell, tdBell);
+	INT_ID_METHOD(turnOn, tdTurnOn);
+	INT_ID_METHOD(turnOff, tdTurnOff);
+	INT_ID_METHOD(execute, tdExecute);
+	INT_ID_METHOD(stop, tdStop);
+	INT_ID_METHOD(learn, tdLearn);
 
 	NAN_MODULE_INIT(Init) {
 		tdInit();
@@ -112,6 +109,11 @@ namespace JonTelldus {
 		Set(target, "turnOn", Nan::GetFunction(Nan::New<FunctionTemplate>(turnOn)).ToLocalChecked());
 		Set(target, "turnOff",Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
 		Set(target, "bell",Nan::GetFunction(Nan::New<FunctionTemplate>(bell)).ToLocalChecked());
+		Set(target, "up",Nan::GetFunction(Nan::New<FunctionTemplate>(up)).ToLocalChecked());
+		Set(target, "down",Nan::GetFunction(Nan::New<FunctionTemplate>(down)).ToLocalChecked());
+		Set(target, "execute",Nan::GetFunction(Nan::New<FunctionTemplate>(execute)).ToLocalChecked());
+		Set(target, "stop",Nan::GetFunction(Nan::New<FunctionTemplate>(stop)).ToLocalChecked());
+		Set(target, "learn",Nan::GetFunction(Nan::New<FunctionTemplate>(learn)).ToLocalChecked());
 		Set(target, "addRawDeviceEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
 		Set(target, "addSensorEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addSensorEventListener)).ToLocalChecked());
 		
