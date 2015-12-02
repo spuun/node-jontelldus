@@ -68,6 +68,13 @@ namespace JonTelldus {
 #define ADD_METHOD(target,name) \
   Set(target, #name, Nan::GetFunction(Nan::New<FunctionTemplate>(name)).ToLocalChecked());
 
+#define ADD_ENUM(target, name, values)\
+  {\
+    v8::Local<v8::Object> enumObj = Nan::New<v8::Object>();\
+    for (auto& item: values)\
+      Set(enumObj, item.key, item.value, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete));\
+    Set(target, name, enumObj, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete)); \
+  }
 
 #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
@@ -180,23 +187,9 @@ namespace JonTelldus {
     ADD_METHOD(target, addSensorEventListener);
     ADD_METHOD(target, addDeviceEventListener);
 
-    // "ENUMS"
-    v8::PropertyAttribute readOnlyDontDelete = (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete);
-    // data type enum
-    v8::Local<v8::Object> sensorTypesObj = Nan::New<v8::Object>();
-    for (auto& sensorValueType: sensorValueTypes)
-      Set(sensorTypesObj, sensorValueType.key, sensorValueType.value, readOnlyDontDelete);
-    Set(target, "sensorValueType", sensorTypesObj, readOnlyDontDelete); 
-    // methods enum
-    v8::Local<v8::Object> methodsObj = Nan::New<v8::Object>();
-    for (auto& method: methods) 
-      Set(methodsObj, method.key, method.value, readOnlyDontDelete);
-    Set(target, "method", methodsObj, readOnlyDontDelete);
-    // error codes
-    v8::Local<v8::Object> errorObj = Nan::New<v8::Object>();
-    for (auto& errorCode: errorCodes)
-      Set(errorObj, errorCode.key, errorCode.value);
-    Set(target, "errorCode", errorObj, readOnlyDontDelete);
+    ADD_ENUM(target, "sensorValueType", sensorValueTypes);
+    ADD_ENUM(target, "method", methods);
+    ADD_ENUM(target, "errorCode", errorCodes);
   }
   NODE_MODULE(jontelldus, Init)
 }
