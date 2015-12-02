@@ -5,9 +5,7 @@ namespace JonTelldus {
     : Nan::AsyncWorker(callback), fn(fn_), id(id_) {}
 
   void IntIdWorker::Execute() {
-    printf("Execute\n");
     ret = fn(id);
-    printf("/Execute %d\n", ret);
   }
 
   void IntIdWorker::HandleOKCallback() {
