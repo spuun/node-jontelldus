@@ -27,6 +27,16 @@ namespace JonTelldus {
 				const char *propertyName,
 				int numberValue);
 
+	inline extern Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+				const char *propertyName,
+				int numberValue,
+				v8::PropertyAttribute attribs);
+
+	inline extern Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+				const char *propertyName,
+				v8::Local<v8::Value> value, 
+				v8::PropertyAttribute attribs);
+	
 	Nan::Maybe<bool> Set(
 		v8::Local<v8::Array> target,
 		unsigned int index,
@@ -61,6 +71,24 @@ namespace JonTelldus {
 			Nan::New<v8::Number>(numberValue));
 	}
 
+	Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+		const char *propertyName,
+		int numberValue,
+		v8::PropertyAttribute attribs) {
+		return Nan::ForceSet(target,
+				Nan::New<v8::String>(propertyName).ToLocalChecked(),
+				Nan::New<v8::Number>(numberValue),
+				attribs);
+	}
+	Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+		const char *propertyName,
+		v8::Local<v8::Value> value, 
+		v8::PropertyAttribute attribs) {
+		return Nan::ForceSet(target,
+				Nan::New<v8::String>(propertyName).ToLocalChecked(),
+				value,
+				attribs);
+	}
 }
 
 #endif

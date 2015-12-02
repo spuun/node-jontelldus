@@ -102,28 +102,31 @@ NAN_MODULE_INIT(Init) {
   Set(target, "turnOff",Nan::GetFunction(Nan::New<FunctionTemplate>(turnOff)).ToLocalChecked());
   Set(target, "addRawDeviceEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addRawDeviceEventListener)).ToLocalChecked());
   Set(target, "addSensorEventListener", Nan::GetFunction(Nan::New<FunctionTemplate>(addSensorEventListener)).ToLocalChecked());
+	
+	// "ENUMS"
+	v8::PropertyAttribute readOnlyDontDelete = (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete);
 	// data type enum
 	v8::Local<v8::Object> datatypesObj = Nan::New<v8::Object>();
-	Set(datatypesObj, "Temperature", TELLSTICK_TEMPERATURE);
-	Set(datatypesObj, "Humidity", TELLSTICK_HUMIDITY);
-	Set(datatypesObj, "RainTotal", TELLSTICK_RAINTOTAL);
-	Set(datatypesObj, "RainRate", TELLSTICK_RAINRATE);
-	Set(datatypesObj, "WindDirection", TELLSTICK_WINDDIRECTION);
-	Set(datatypesObj, "WindAverage", TELLSTICK_WINDAVERAGE);
-	Set(datatypesObj, "WindGust", TELLSTICK_WINDGUST);
-	Set(target, "sensorValueType", datatypesObj);
+	Set(datatypesObj, "Temperature", TELLSTICK_TEMPERATURE, readOnlyDontDelete);
+	Set(datatypesObj, "Humidity", TELLSTICK_HUMIDITY, readOnlyDontDelete);
+	Set(datatypesObj, "RainTotal", TELLSTICK_RAINTOTAL, readOnlyDontDelete);
+	Set(datatypesObj, "RainRate", TELLSTICK_RAINRATE, readOnlyDontDelete);
+	Set(datatypesObj, "WindDirection", TELLSTICK_WINDDIRECTION, readOnlyDontDelete);
+	Set(datatypesObj, "WindAverage", TELLSTICK_WINDAVERAGE, readOnlyDontDelete);
+	Set(datatypesObj, "WindGust", TELLSTICK_WINDGUST, readOnlyDontDelete);
+	Set(target, "sensorValueType", datatypesObj, readOnlyDontDelete); 
 	// methods enum
 	v8::Local<v8::Object> methodsObj = Nan::New<v8::Object>();
-	Set(methodsObj, "TurnOn", TELLSTICK_TURNON);
-	Set(methodsObj, "TurnOff", TELLSTICK_TURNOFF);
-	Set(methodsObj, "Bell", TELLSTICK_BELL);
-	Set(methodsObj, "Toggle", TELLSTICK_TOGGLE);
-	Set(methodsObj, "Dim", TELLSTICK_DIM);
-	Set(methodsObj, "Execute", TELLSTICK_EXECUTE);
-	Set(methodsObj, "Up", TELLSTICK_UP);
-	Set(methodsObj, "Down", TELLSTICK_DOWN);
-	Set(methodsObj, "Stop", TELLSTICK_STOP);
-	Set(target, "method", methodsObj);
+	Set(methodsObj, "TurnOn", TELLSTICK_TURNON, readOnlyDontDelete);
+	Set(methodsObj, "TurnOff", TELLSTICK_TURNOFF, readOnlyDontDelete);
+	Set(methodsObj, "Bell", TELLSTICK_BELL, readOnlyDontDelete);
+	Set(methodsObj, "Toggle", TELLSTICK_TOGGLE, readOnlyDontDelete);
+	Set(methodsObj, "Dim", TELLSTICK_DIM, readOnlyDontDelete);
+	Set(methodsObj, "Execute", TELLSTICK_EXECUTE, readOnlyDontDelete);
+	Set(methodsObj, "Up", TELLSTICK_UP, readOnlyDontDelete);
+	Set(methodsObj, "Down", TELLSTICK_DOWN, readOnlyDontDelete);
+	Set(methodsObj, "Stop", TELLSTICK_STOP, readOnlyDontDelete);
+	Set(target, "method", methodsObj, readOnlyDontDelete);
 }
 NODE_MODULE(jontelldus, Init)
 }
