@@ -5,33 +5,33 @@
 
 namespace JonTelldus {
 
-GetDevicesWorker::GetDevicesWorker(Nan::Callback *callback)
-	: Nan::AsyncWorker(callback) {};
+  GetDevicesWorker::GetDevicesWorker(Nan::Callback *callback)
+    : Nan::AsyncWorker(callback) {};
 
-void GetDevicesWorker::Execute() {
+  void GetDevicesWorker::Execute() {
     for (int i = 0; i < tdGetNumberOfDevices(); i++)
     {
-    	Device * device = new Device();
-    	device->id = tdGetDeviceId(i);
+      Device * device = new Device();
+      device->id = tdGetDeviceId(i);
 
-    	char *name = tdGetName(device->id);
-    	char *protocol = tdGetProtocol(device->id);
-    	char *model = tdGetModel(device->id);
+      char *name = tdGetName(device->id);
+      char *protocol = tdGetProtocol(device->id);
+      char *model = tdGetModel(device->id);
 
-    	device->name = name;
-    	device->protocol = protocol;
-    	device->model = model;
+      device->name = name;
+      device->protocol = protocol;
+      device->model = model;
 
-    	tdReleaseString(name);
-    	tdReleaseString(protocol);
-    	tdReleaseString(model);
+      tdReleaseString(name);
+      tdReleaseString(protocol);
+      tdReleaseString(model);
 
-    	_devices.push_back(device);
+      _devices.push_back(device);
     }
-}
+  }
 
-void GetDevicesWorker::HandleOKCallback() {
-	v8::Local<v8::Array> ret = Nan::New<v8::Array>();
+  void GetDevicesWorker::HandleOKCallback() {
+    v8::Local<v8::Array> ret = Nan::New<v8::Array>();
 
     std::for_each(_devices.begin(), _devices.end(), [ret](Device* device) {
         v8::Local<v8::Object> deviceObj = Nan::New<v8::Object>();
@@ -41,12 +41,12 @@ void GetDevicesWorker::HandleOKCallback() {
         Set(deviceObj, "model", device->model.c_str());
         Set(ret, ret->Length(), deviceObj);
         delete device;
-    });
+        });
 
     v8::Handle<v8::Value> argv[] = {
       ret
     };
     callback->Call(1, argv);
-}
+  }
 
 }

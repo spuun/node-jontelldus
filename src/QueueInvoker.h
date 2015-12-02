@@ -5,20 +5,20 @@
 
 namespace JonTelldus {
 
-class CallbackInvoker {
-protected:
-  Nan::Callback* callback;
-public:
-  CallbackInvoker(Nan::Callback* callback_);
-	virtual ~CallbackInvoker() {}
-	void Invoke(); 
-  virtual void Execute() = 0;
-  void Destroy();
+  class CallbackInvoker {
+    protected:
+      Nan::Callback* callback;
+    public:
+      CallbackInvoker(Nan::Callback* callback_);
+      virtual ~CallbackInvoker() {}
+      void Invoke(); 
+      virtual void Execute() = 0;
+      void Destroy();
 
-	uv_work_t request;
-};
+      uv_work_t request;
+  };
 
-void QueueCallback(CallbackInvoker* invoker);
+  void QueueCallback(CallbackInvoker* invoker);
 
 }
 #endif

@@ -8,22 +8,22 @@
 #include "JonTelldus.h"
 
 namespace JonTelldus {
-	
-struct Device {
-	int id;
-	std::string name;
-	std::string protocol;
-	std::string model;
-};
 
-class GetDevicesWorker : public Nan::AsyncWorker {
-	private:		
-		std::list<Device*> _devices;
-	public:
-		GetDevicesWorker(Nan::Callback *callback);
-		void Execute();
-		void HandleOKCallback();
-};
+  struct Device {
+    int id;
+    std::string name;
+    std::string protocol;
+    std::string model;
+  };
+
+  class GetDevicesWorker : public Nan::AsyncWorker {
+    private:		
+      std::list<Device*> _devices;
+    public:
+      GetDevicesWorker(Nan::Callback *callback);
+      void Execute();
+      void HandleOKCallback();
+  };
 
 }
 #endif
