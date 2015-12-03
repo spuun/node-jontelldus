@@ -8,6 +8,7 @@
 #include "DeviceEventCallbackInvoker.h"
 #include "GetDevicesWorker.h"
 #include "IntIdWorker.h"
+#include "SendRawCommandWorker.h"
 
 namespace JonTelldus {
 
@@ -162,6 +163,20 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
+  NAN_METHOD(sendRawCommand) {
+    if (info.Length() < 1 || !info[0]->IsString()) {
+      Nan::ThrowSyntaxError("Missing argument command or not a string.");
+      return;
+    }
+
+    Nan::Callback *callback = 0;
+    if (info.Length() > 1 && info[1]->IsFunction()) {
+      callback = new Nan::Callback(info[1].As<Function>());
+    }
+    v8::String::Utf8Value utf8String(info[0]->ToString());
+    Nan::AsyncQueueWorker(new SendRawCommandWorker(callback, *utf8String));
+    info.GetReturnValue().Set(Nan::Undefined());
+  }
 
   INT_ID_METHOD(up, tdUp);
   INT_ID_METHOD(down, tdDown);
@@ -186,6 +201,7 @@ namespace JonTelldus {
     ADD_METHOD(target, addRawDeviceEventListener);
     ADD_METHOD(target, addSensorEventListener);
     ADD_METHOD(target, addDeviceEventListener);
+    ADD_METHOD(target, sendRawCommand);
 
     ADD_ENUM(target, "sensorValueType", sensorValueTypes);
     ADD_ENUM(target, "method", methods);

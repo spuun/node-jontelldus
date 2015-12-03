@@ -9,7 +9,8 @@
       "src/SensorEventCallbackInvoker.cc",
       "src/DeviceEventCallbackInvoker.cc",
       "src/GetDevicesWorker.cc",
-			"src/IntIdWorker.cc"
+			"src/IntIdWorker.cc",
+      "src/SendRawCommandWorker.cc"
   	],
     "conditions": [
         ['OS=="mac"', {
