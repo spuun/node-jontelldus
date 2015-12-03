@@ -9,10 +9,9 @@ namespace JonTelldus {
   class RawDeviceEventCallbackInvoker
     : public CallbackInvoker {
       private:
-        int controllerId;
         std::string data;
       public:
-        RawDeviceEventCallbackInvoker(Nan::Callback *callback, int controllerId_, const char *data_); 
+        RawDeviceEventCallbackInvoker(Nan::Callback *callback, const char *data_); 
         void Execute();
     };
 

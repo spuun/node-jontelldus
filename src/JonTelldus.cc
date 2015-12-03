@@ -129,7 +129,7 @@ namespace JonTelldus {
 
   void rawDeviceEventCallback(const char* data, int controllerId, int callbackId, void *context) {
     Nan::Callback *callback = static_cast<Nan::Callback *>(context);
-    QueueCallback(new RawDeviceEventCallbackInvoker(callback, controllerId, data));
+    QueueCallback(new RawDeviceEventCallbackInvoker(callback, data));
   }
 
   NAN_METHOD(addRawDeviceEventListener) {
