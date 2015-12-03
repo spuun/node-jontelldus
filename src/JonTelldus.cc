@@ -12,26 +12,12 @@
 
 namespace JonTelldus {
 
-  using v8::FunctionTemplate;
-  using v8::Handle;
-  using v8::Local;
-  using v8::Isolate;
-  using v8::Array;
-  using v8::FunctionCallbackInfo;
-  using v8::Value;
-  using v8::Object;
-  using v8::String;
-  using v8::Number;
-  using v8::Exception;
-  using v8::Persistent;
-  using v8::Function;
-
-  struct keyvalue {
+  typedef struct pair {
     const char *key;
     int value;
-  };
+  } pair_t;
 
-  struct keyvalue sensorValueTypes[] = {
+  pair_t sensorValueTypes[] = {
     {"Temperature", TELLSTICK_TEMPERATURE },
     {"Humidity", TELLSTICK_HUMIDITY },
     {"RainTotal", TELLSTICK_RAINTOTAL },
@@ -40,7 +26,7 @@ namespace JonTelldus {
     {"WindAverage", TELLSTICK_WINDAVERAGE },
     {"WindGust", TELLSTICK_WINDGUST }
   };
-  struct keyvalue methods[] = {
+  pair_t methods[] = {
     { "TurnOn", TELLSTICK_TURNON },
     { "TurnOff", TELLSTICK_TURNOFF },
     { "Bell", TELLSTICK_BELL },
@@ -51,7 +37,7 @@ namespace JonTelldus {
     { "Down", TELLSTICK_DOWN },
     { "Stop", TELLSTICK_STOP },
   };
-  struct keyvalue errorCodes[] = {
+  pair_t errorCodes[] = {
     { "NoError", TELLSTICK_SUCCESS },
     { "NotFound", TELLSTICK_ERROR_NOT_FOUND }, 
     { "PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED },
@@ -66,8 +52,9 @@ namespace JonTelldus {
     { "Unknown", TELLSTICK_ERROR_UNKNOWN }
   };
 
+
 #define ADD_METHOD(target,name) \
-  Set(target, #name, Nan::GetFunction(Nan::New<FunctionTemplate>(name)).ToLocalChecked());
+  Set(target, #name, Nan::GetFunction(Nan::New<v8::FunctionTemplate>(name)).ToLocalChecked());
 
 #define ADD_ENUM(target, name, values)\
   {\
@@ -79,19 +66,21 @@ namespace JonTelldus {
 
 #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
-    if (info.Length() < 2) { \
-      Nan::ThrowSyntaxError("Missing arguments. Id and callback needed."); \
+    if (info.Length() < 1) { \
+      Nan::ThrowSyntaxError("Missing arguments. Id required, callback optional."); \
       return; \
     } \
     if (!info[0]->IsInt32()) { \
       Nan::ThrowSyntaxError("Id must be integer"); \
       return; \
     } \
-    if (!info[1]->IsFunction()) { \
+    if (info.Length() > 1 && !info[1]->IsFunction()) { \
       Nan::ThrowSyntaxError("Callback must be function, duh"); \
       return; \
     } \
-    Nan::Callback *callback = new Nan::Callback(info[1].As<Function>()); \
+    Nan::Callback *callback = 0; \
+    if (info.Length() > 1 && !info[1]->IsFunction()) \
+      callback = new Nan::Callback(info[1].As<v8::Function>()); \
     Nan::AsyncQueueWorker(new IntIdWorker(callback, fn, info[0]->IntegerValue())); \
     info.GetReturnValue().Set(Nan::Undefined()); \
   } 
@@ -111,7 +100,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
-    Nan::Callback *callback = new Nan::Callback(info[0].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
     tdRegisterDeviceEvent(&deviceEventCallback, callback);
     info.GetReturnValue().Set(Nan::Undefined());
   }
@@ -133,7 +122,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
-    Nan::Callback *callback = new Nan::Callback(info[0].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
     tdRegisterSensorEvent(&sensorEventCallback, callback);
     info.GetReturnValue().Set(Nan::Undefined());
   }
@@ -148,7 +137,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
-    Nan::Callback *callback = new Nan::Callback(info[0].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
     tdRegisterRawDeviceEvent(&rawDeviceEventCallback, callback);
     info.GetReturnValue().Set(Nan::Undefined());
   }
@@ -158,7 +147,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
-    Nan::Callback *callback = new Nan::Callback(info[0].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
     Nan::AsyncQueueWorker(new GetDevicesWorker(callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
@@ -171,7 +160,7 @@ namespace JonTelldus {
 
     Nan::Callback *callback = 0;
     if (info.Length() > 1 && info[1]->IsFunction()) {
-      callback = new Nan::Callback(info[1].As<Function>());
+      callback = new Nan::Callback(info[1].As<v8::Function>());
     }
     v8::String::Utf8Value utf8String(info[0]->ToString());
     Nan::AsyncQueueWorker(new SendRawCommandWorker(callback, *utf8String));
