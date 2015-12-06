@@ -17,6 +17,10 @@
   "scripts": {
     "install": "node-gyp configure build"
   },
+  "repository": {
+		"url": "https://github.com/spuun/node-jontelldus",
+		"type": "git"
+  },
   "os": [
     "darwin",
     "linux",

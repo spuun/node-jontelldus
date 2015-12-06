@@ -10,7 +10,8 @@
       "src/DeviceEventCallbackInvoker.cc",
       "src/GetDevicesWorker.cc",
 			"src/IntIdWorker.cc",
-      "src/SendRawCommandWorker.cc"
+      "src/SendRawCommandWorker.cc",
+      "src/AddDeviceWorker.cc"
   	],
     "conditions": [
         ['OS=="mac"', {

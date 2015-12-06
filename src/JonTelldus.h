@@ -7,32 +7,38 @@
 
 namespace JonTelldus {
 
-  inline extern Nan::Maybe<bool> Set(
+  inline extern
+  Nan::Maybe<bool> Set(
       v8::Local<v8::Array> target,
       unsigned int index,
       v8::Local<v8::Value> value);
 
-  inline extern Nan::Maybe<bool> Set(
+  inline extern
+  Nan::Maybe<bool> Set(
       v8::Local<v8::Object> target,
       const char *propertyName,
       v8::Local<v8::Value> value);
 
-  inline extern Nan::Maybe<bool> Set(
+  inline extern
+  Nan::Maybe<bool> Set(
       v8::Local<v8::Object> target,
       const char *propertyName,
       const char *stringValue);
 
-  inline extern Nan::Maybe<bool> Set(
+  inline extern
+  Nan::Maybe<bool> Set(
       v8::Local<v8::Object> target,
       const char *propertyName,
       int numberValue);
 
-  inline extern Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+  inline extern
+  Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
       const char *propertyName,
       int numberValue,
       v8::PropertyAttribute attribs);
 
-  inline extern Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
+  inline extern
+  Nan::Maybe<bool> Set(v8::Local<v8::Object> target,
       const char *propertyName,
       v8::Local<v8::Value> value, 
       v8::PropertyAttribute attribs);
@@ -88,6 +94,24 @@ namespace JonTelldus {
         Nan::New<v8::String>(propertyName).ToLocalChecked(),
         value,
         attribs);
+  }
+
+
+  inline extern 
+  bool Has(v8::Local<v8::Object> obj,
+      const char *propertyName);
+
+
+  bool Has(v8::Local<v8::Object> obj,
+      const char *propertyName) {
+    return Nan::Has(obj, Nan::New<v8::String>(propertyName).ToLocalChecked()).FromJust();
+  }
+
+  inline extern 
+  Nan::MaybeLocal<v8::Value> Get(v8::Local<v8::Object> obj, const char* propertyName);
+
+  Nan::MaybeLocal<v8::Value> Get(v8::Local<v8::Object> obj, const char* propertyName) {
+    return Nan::Get(obj, Nan::New<v8::String>(propertyName).ToLocalChecked());
   }
 }
 

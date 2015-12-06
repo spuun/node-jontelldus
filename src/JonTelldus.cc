@@ -9,6 +9,7 @@
 #include "GetDevicesWorker.h"
 #include "IntIdWorker.h"
 #include "SendRawCommandWorker.h"
+#include "AddDeviceWorker.h"
 
 namespace JonTelldus {
 
@@ -167,6 +168,43 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
+  NAN_METHOD(addDevice) {
+    if (info.Length() < 1 || !info[0]->IsObject()) {
+      Nan::ThrowSyntaxError("Missing device configuration object.");
+      return;
+    }
+
+    v8::Local<v8::Object> deviceObj = info[0]->ToObject();
+
+    if (!Has(deviceObj, "name")) {
+      Nan::ThrowError("No name property on device");
+      return;
+    }
+
+    if (!Has(deviceObj, "protocol")) {
+      Nan::ThrowError("No protocol property on device");
+      return;
+    }
+
+    if (!Has(deviceObj, "model")) {
+      Nan::ThrowError("No model property on device");
+      return;
+    }
+
+    v8::String::Utf8Value name(Get(deviceObj, "name").ToLocalChecked()->ToString());
+    v8::String::Utf8Value protocol(Get(deviceObj, "protocol").ToLocalChecked()->ToString());
+    v8::String::Utf8Value model(Get(deviceObj, "model").ToLocalChecked()->ToString());
+
+    Nan::Callback *callback = 0;
+    if (info.Length() > 1 && info[1]->IsFunction()) {
+      callback = new Nan::Callback(info[1].As<v8::Function>());
+    }
+
+
+    Nan::AsyncQueueWorker(new AddDeviceWorker(callback, *name, *protocol, *model));
+    info.GetReturnValue().Set(Nan::Undefined());
+  }
+
   INT_ID_METHOD(up, tdUp);
   INT_ID_METHOD(down, tdDown);
   INT_ID_METHOD(bell, tdBell);
@@ -191,6 +229,7 @@ namespace JonTelldus {
     ADD_METHOD(target, addSensorEventListener);
     ADD_METHOD(target, addDeviceEventListener);
     ADD_METHOD(target, sendRawCommand);
+    ADD_METHOD(target, addDevice);
 
     ADD_ENUM(target, "sensorValueType", sensorValueTypes);
     ADD_ENUM(target, "method", methods);
