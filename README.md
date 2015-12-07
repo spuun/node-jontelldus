@@ -1,7 +1,7 @@
 # node-jontelldus
 Telldus-core wrapper.
 
-Only tested with node 5.1.0. Under development..
+Under development, poorly tested. I've used node 5.1.0.
 
 ## Methods
 | method | description |
