@@ -11,8 +11,12 @@ namespace JonTelldus {
   void GetDevicesWorker::Execute() {
     for (int i = 0; i < tdGetNumberOfDevices(); i++)
     {
+      int deviceId = tdGetDeviceId(i);
+      if (deviceId == -1) {
+        continue;
+      }
       Device * device = new Device();
-      device->id = tdGetDeviceId(i);
+      device->id = deviceId;
 
       char *name = tdGetName(device->id);
       char *protocol = tdGetProtocol(device->id);
