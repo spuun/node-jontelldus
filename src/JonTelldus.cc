@@ -84,7 +84,7 @@ namespace JonTelldus {
       return; \
     } \
     Nan::Callback *callback = 0; \
-    if (info.Length() > 1 && !info[1]->IsFunction()) \
+    if (info.Length() > 1 && info[1]->IsFunction()) \
       callback = new Nan::Callback(info[1].As<v8::Function>()); \
     Nan::AsyncQueueWorker(new IntIdWorker(callback, fn, info[0]->IntegerValue())); \
     info.GetReturnValue().Set(Nan::Undefined()); \

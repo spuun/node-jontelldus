@@ -5,15 +5,16 @@ namespace JonTelldus {
     : Nan::AsyncWorker(callback), fn(fn_), id(id_) {}
 
   void IntIdWorker::Execute() {
-    ret = fn(id);
+    result = fn(id);
   }
 
   void IntIdWorker::HandleOKCallback() {
     v8::Handle<v8::Value> argv[] = {
-      Nan::New<v8::Number>(ret)
+      result.ToObject()
     };
-    if (callback) 
+    if (callback) {
       callback->Call(1, argv);
+    }
   }
 
 }

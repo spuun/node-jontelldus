@@ -4,6 +4,7 @@
     "target_name": "jontelldus",
     "sources": [ 
   		"src/JonTelldus.cc",
+      "src/TdResult.cc",
   		"src/QueueInvoker.cc",
   		"src/RawDeviceEventCallbackInvoker.cc",
       "src/SensorEventCallbackInvoker.cc",
