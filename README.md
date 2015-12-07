@@ -45,8 +45,8 @@ jtelldus.getDevices((devices) => {
 ### turnOn 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.turnOn(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.turnOn(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('On sent to device 1');
   }
 });
@@ -55,8 +55,8 @@ jtelldus.turnOn(1, (err) => {
 ### turnOff 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.turnOff(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.turnOff(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Off sent to device 1');
   }
 });
@@ -65,8 +65,8 @@ jtelldus.turnOff(1, (err) => {
 ### up 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.up(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.up(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Up sent to device 1');
   }
 });
@@ -75,8 +75,8 @@ jtelldus.up(1, (err) => {
 ### down
 ```
 var jtelldus = require('jontelldus');
-jtelldus.down(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.down(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Down sent to device 1');
   }
 });
@@ -85,8 +85,8 @@ jtelldus.down(1, (err) => {
 ### bell 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.bell(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.bell(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Bell sent to device 1');
   }
 });
@@ -95,8 +95,8 @@ jtelldus.bell(1, (err) => {
 ### execute 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.execute(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.execute(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Execute sent to device 1');
   }
 });
@@ -105,8 +105,8 @@ jtelldus.execute(1, (err) => {
 ### stop
 ```
 var jtelldus = require('jontelldus');
-jtelldus.stop(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.stop(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Stop sent to device 1');
   }
 });
@@ -115,8 +115,8 @@ jtelldus.stop(1, (err) => {
 ### learn
 ```
 var jtelldus = require('jontelldus');
-jtelldus.learn(1, (err) => {
-  if (err == jtelldus.errorCode.NoError) {
+jtelldus.learn(1, (result) => {
+  if (result.code == jtelldus.errorCode.NoError) {
     console.log('Learn sent to device 1');
   }
 });
