@@ -13,12 +13,17 @@
 
 namespace JonTelldus {
 
-  typedef struct pair {
-    const char *key;
-    int value;
-  } pair_t;
+  const std::string deviceParameterNames[7] = {
+    "devices",
+    "house",
+    "unit",
+    "code",
+    "system",
+    "units",
+    "fade"
+  };
 
-  pair_t sensorValueTypes[] = {
+  pair_t sensorValueTypes[7] = {
     {"Temperature", TELLSTICK_TEMPERATURE },
     {"Humidity", TELLSTICK_HUMIDITY },
     {"RainTotal", TELLSTICK_RAINTOTAL },
@@ -27,7 +32,7 @@ namespace JonTelldus {
     {"WindAverage", TELLSTICK_WINDAVERAGE },
     {"WindGust", TELLSTICK_WINDGUST }
   };
-  pair_t methods[] = {
+  pair_t methods[9] = {
     { "TurnOn", TELLSTICK_TURNON },
     { "TurnOff", TELLSTICK_TURNOFF },
     { "Bell", TELLSTICK_BELL },
@@ -38,7 +43,7 @@ namespace JonTelldus {
     { "Down", TELLSTICK_DOWN },
     { "Stop", TELLSTICK_STOP },
   };
-  pair_t errorCodes[] = {
+  pair_t errorCodes[12] = {
     { "NoError", TELLSTICK_SUCCESS },
     { "NotFound", TELLSTICK_ERROR_NOT_FOUND }, 
     { "PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED },
@@ -53,11 +58,10 @@ namespace JonTelldus {
     { "Unknown", TELLSTICK_ERROR_UNKNOWN }
   };
 
+  #define ADD_METHOD(target,name) \
+    Set(target, #name, Nan::GetFunction(Nan::New<v8::FunctionTemplate>(name)).ToLocalChecked());
 
-#define ADD_METHOD(target,name) \
-  Set(target, #name, Nan::GetFunction(Nan::New<v8::FunctionTemplate>(name)).ToLocalChecked());
-
-#define ADD_ENUM(target, name, values)\
+  #define ADD_ENUM(target, name, values)\
   {\
     v8::Local<v8::Object> enumObj = Nan::New<v8::Object>();\
     for (auto& item: values)\
@@ -65,7 +69,7 @@ namespace JonTelldus {
     Set(target, name, enumObj, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete)); \
   }
 
-#define INT_ID_METHOD(name, fn) \
+  #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
     if (info.Length() < 1) { \
       Nan::ThrowSyntaxError("Missing arguments. Id required, callback optional."); \
@@ -168,41 +172,17 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
-  NAN_METHOD(addDevice) {
+  NAN_METHOD(addDevice) {    
     if (info.Length() < 1 || !info[0]->IsObject()) {
       Nan::ThrowSyntaxError("Missing device configuration object.");
       return;
     }
 
-    v8::Local<v8::Object> deviceObj = info[0]->ToObject();
-
-    if (!Has(deviceObj, "name")) {
-      Nan::ThrowError("No name property on device");
-      return;
+    AddDeviceWorker *worker = AddDeviceWorker::CreateFromArguments(info);
+    if (worker != 0) {
+      Nan::AsyncQueueWorker(worker);
+      info.GetReturnValue().Set(Nan::Undefined());
     }
-
-    if (!Has(deviceObj, "protocol")) {
-      Nan::ThrowError("No protocol property on device");
-      return;
-    }
-
-    if (!Has(deviceObj, "model")) {
-      Nan::ThrowError("No model property on device");
-      return;
-    }
-
-    v8::String::Utf8Value name(Get(deviceObj, "name").ToLocalChecked()->ToString());
-    v8::String::Utf8Value protocol(Get(deviceObj, "protocol").ToLocalChecked()->ToString());
-    v8::String::Utf8Value model(Get(deviceObj, "model").ToLocalChecked()->ToString());
-
-    Nan::Callback *callback = 0;
-    if (info.Length() > 1 && info[1]->IsFunction()) {
-      callback = new Nan::Callback(info[1].As<v8::Function>());
-    }
-
-
-    Nan::AsyncQueueWorker(new AddDeviceWorker(callback, *name, *protocol, *model));
-    info.GetReturnValue().Set(Nan::Undefined());
   }
 
   INT_ID_METHOD(up, tdUp);

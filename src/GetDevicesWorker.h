@@ -4,6 +4,7 @@
 #include <node.h>
 #include <nan.h>
 #include <list>
+#include <map>
 #include <string>
 #include "JonTelldus.h"
 
@@ -14,6 +15,7 @@ namespace JonTelldus {
     std::string name;
     std::string protocol;
     std::string model;
+    std::map<std::string, std::string> parameters;
   };
 
   class GetDevicesWorker : public Nan::AsyncWorker {

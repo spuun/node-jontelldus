@@ -7,6 +7,16 @@
 
 namespace JonTelldus {
 
+  typedef struct pair {
+    const char *key;
+    int value;
+  } pair_t;
+
+  extern const std::string deviceParameterNames[7];
+  extern pair_t sensorValueTypes[7];
+  extern pair_t methods[9];
+  extern pair_t errorCodes[12];
+
   inline extern
   Nan::Maybe<bool> Set(
       v8::Local<v8::Array> target,
@@ -112,6 +122,13 @@ namespace JonTelldus {
 
   Nan::MaybeLocal<v8::Value> Get(v8::Local<v8::Object> obj, const char* propertyName) {
     return Nan::Get(obj, Nan::New<v8::String>(propertyName).ToLocalChecked());
+  }
+
+    inline extern 
+  Nan::MaybeLocal<v8::Value> Get(v8::Local<v8::Object> obj, unsigned int idx);
+
+  Nan::MaybeLocal<v8::Value> Get(v8::Local<v8::Object> obj, unsigned int idx) {
+    return Nan::Get(obj, Nan::New<v8::Number>(idx));
   }
 }
 

@@ -26,6 +26,14 @@ namespace JonTelldus {
       tdReleaseString(protocol);
       tdReleaseString(model);
 
+      for (auto& key: deviceParameterNames) {
+        char *paramValue = tdGetDeviceParameter(device->id, key.c_str(), "");
+        std::string paramStrValue(paramValue);
+        tdReleaseString(paramValue);
+        if (paramStrValue.length() > 0) {
+          device->parameters[key] = paramStrValue; 
+        }
+      }
       _devices.push_back(device);
     }
   }
@@ -39,6 +47,12 @@ namespace JonTelldus {
         Set(deviceObj, "name", device->name.c_str());
         Set(deviceObj, "protocol", device->protocol.c_str());
         Set(deviceObj, "model", device->model.c_str());
+
+        v8::Local<v8::Object> paramObj = Nan::New<v8::Object>();
+        for (auto it = device->parameters.begin(); it != device->parameters.end(); ++it) {
+          Set(paramObj, it->first.c_str(), it->second.c_str());
+        }
+        Set(deviceObj, "parameters", paramObj);
         Set(ret, ret->Length(), deviceObj);
         delete device;
         });
