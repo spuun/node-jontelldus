@@ -28,6 +28,7 @@ telldus.getDevices(devices =>
 | addSensorEventListener(callback(sensorEventData)) | add a sensor event listener |
 | addDeviceEventListener(callback(deviceEventData)) | add a device event listener |
 | sendRawCommand(command, callback(errorCode)) | send raw device command |
+| addDevice(deviceConfiguration, callback(deviceId) | add a new device |
 
 ## Properties
 | property | description |
