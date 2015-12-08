@@ -7,18 +7,18 @@ Under development, poorly tested. I've used node 5.1.0.
 | method | description |
 |--------|-------------|
 | [getDevices](#user-content-getdevices)(callback(devices)) | get all devices |
-| [turnOn](#user-content-turnon)(deviceId, callback(resultObj)) | send on command to device | 
-| [turnOff](#user-content-turnoff)(deviceId, callback(resultObj)) | send off command to device |
-| [up](#user-content-up)(deviceId, callback(resultObj)) | send up command to device |
-| [down](#user-content-down)(deviceId, callback(resultObj)) | send down command to device |
-| [bell](#user-content-bell)(deviceId, callback(resultObj)) | send bell command to device |
-| [execute](#user-content-execute)(deviceId, callback(resultObj)) | send execute command to device |
-| [stop](#user-content-stop)(deviceId, callback(resultObj)) | send stop command to device |
-| [learn](#user-content-learn)(deviceId, callback(resultObj)) | send learn command for device |
+| [turnOn](#user-content-turnon)(deviceId, callback(error)) | send on command to device | 
+| [turnOff](#user-content-turnoff)(deviceId, callback(error)) | send off command to device |
+| [up](#user-content-up)(deviceId, callback(error)) | send up command to device |
+| [down](#user-content-down)(deviceId, callback(error)) | send down command to device |
+| [bell](#user-content-bell)(deviceId, callback(error)) | send bell command to device |
+| [execute](#user-content-execute)(deviceId, callback(error)) | send execute command to device |
+| [stop](#user-content-stop)(deviceId, callback(error)) | send stop command to device |
+| [learn](#user-content-learn)(deviceId, callback(error)) | send learn command for device |
 | [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener)(callback(data)) | add a raw device event listener |
 | [addSensorEventListener](#user-content-addsensoreventlistener)(callback(sensorEventData)) | add a sensor event listener |
 | [addDeviceEventListener](#user-content-adddeviceeventlistener)(callback(deviceEventData)) | add a device event listener |
-| [sendRawCommand](#user-content-sendrawcommand)(command, callback(errorCode)) | send raw device command |
+| [sendRawCommand](#user-content-sendrawcommand)(command, callback(error)) | send raw device command |
 | [addDevice](#user-content-adddevice)(deviceConfiguration, callback(deviceId) | add a new device |
 
 ## Properties
@@ -27,9 +27,6 @@ Under development, poorly tested. I've used node 5.1.0.
 | sensorValueType | enum with sensor value types (Temperature, Humidity, RainTotal, RainRate, WindDirection, WindAverage, WindGust) |
 | method | enum with methods (TurnOn, TurnOff, Bell, Toggle, Dim, Execute, Up, Down, Stop) |
 | errorCode | enum with error codes (NoError, NotFound, PermissionDenied, DeviceNotFound, MethodNotSupported, Communication, ConnectingService, UnknownResponse, Syntax, BrokenPipe, CommunicatingService, Unknown) |
-
-## Result object
-A result object is an object with two properties; code and message. Something has probably gone wrong if code is other than errorCode.NoError. 
 
 ## Examples
 Code examples is probably better than wall of text.
@@ -45,8 +42,8 @@ jtelldus.getDevices((devices) => {
 ### turnOn 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.turnOn(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.turnOn(1, (error) => {
+  if (!error) {
     console.log('On sent to device 1');
   }
 });
@@ -55,8 +52,8 @@ jtelldus.turnOn(1, (result) => {
 ### turnOff 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.turnOff(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.turnOff(1, (error) => {
+  if (!error) {
     console.log('Off sent to device 1');
   }
 });
@@ -65,8 +62,8 @@ jtelldus.turnOff(1, (result) => {
 ### up 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.up(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.up(1, (error) => {
+  if (!error) {
     console.log('Up sent to device 1');
   }
 });
@@ -75,8 +72,8 @@ jtelldus.up(1, (result) => {
 ### down
 ```
 var jtelldus = require('jontelldus');
-jtelldus.down(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.down(1, (error) => {
+  if (!error) {
     console.log('Down sent to device 1');
   }
 });
@@ -85,8 +82,8 @@ jtelldus.down(1, (result) => {
 ### bell 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.bell(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.bell(1, (error) => {
+  if (!error) {
     console.log('Bell sent to device 1');
   }
 });
@@ -95,8 +92,8 @@ jtelldus.bell(1, (result) => {
 ### execute 
 ```
 var jtelldus = require('jontelldus');
-jtelldus.execute(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.execute(1, (error) => {
+  if (!error) {
     console.log('Execute sent to device 1');
   }
 });
@@ -105,8 +102,8 @@ jtelldus.execute(1, (result) => {
 ### stop
 ```
 var jtelldus = require('jontelldus');
-jtelldus.stop(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.stop(1, (error) => {
+  if (!error) {
     console.log('Stop sent to device 1');
   }
 });
@@ -115,8 +112,8 @@ jtelldus.stop(1, (result) => {
 ### learn
 ```
 var jtelldus = require('jontelldus');
-jtelldus.learn(1, (result) => {
-  if (result.code == jtelldus.errorCode.NoError) {
+jtelldus.learn(1, (error) => {
+  if (!error) {
     console.log('Learn sent to device 1');
   }
 });
@@ -161,6 +158,17 @@ var device = {
 jtelldus.addDevice(device, (err, deviceId) => {
   if (err == jtelldus.errorCode.NoError) {
     console.log('Device added. Id = ' + deviceId);
+  }
+});
+```
+
+### sendRawCommand
+```
+var jtelldus = require('jontelldus');
+var command = 'class:command;protocol:waveman;model:codeswitch;house:A;unit:1;method:turnoff;';
+jtelldus.sendRawCommand(command, (error) => {
+  if (error) {
+    console.log(error);
   }
 });
 ```

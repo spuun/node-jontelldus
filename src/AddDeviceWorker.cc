@@ -20,9 +20,9 @@ namespace JonTelldus {
   void AddDeviceWorker::Execute() {
     deviceId = tdAddDevice();
     if (deviceId < 0) {
-      const char *errorString = tdGetErrorString(deviceId);
-      SetErrorMessage(errorString);
-      delete errorString;
+      char *error= tdGetErrorString(deviceId);
+      SetErrorMessage(error);
+      tdReleaseString(error);
       return;
     }
 

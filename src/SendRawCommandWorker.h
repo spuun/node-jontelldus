@@ -8,11 +8,9 @@ namespace JonTelldus {
   {
     private:
       std::string rawCommand;
-      int ret;
     public:
       SendRawCommandWorker(Nan::Callback *callback, char *rawCommand_);
       void Execute();
-      void HandleOKCallback();
   };
 }
 #endif
