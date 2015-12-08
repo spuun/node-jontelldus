@@ -4,14 +4,18 @@
     "target_name": "jontelldus",
     "sources": [ 
   		"src/JonTelldus.cc",
-  		"src/QueueInvoker.cc",
+      "src/WorkerBase.cc",
+      "src/QueueInvoker.cc",
+      "src/Device.cc",
+      "src/AddDeviceWorker.cc",
+      "src/UpdateDeviceWorker.cc",
+      "src/RemoveDeviceWorker.cc",
+      "src/GetDevicesWorker.cc",
+      "src/IntIdWorker.cc",
   		"src/RawDeviceEventCallbackInvoker.cc",
       "src/SensorEventCallbackInvoker.cc",
       "src/DeviceEventCallbackInvoker.cc",
-      "src/GetDevicesWorker.cc",
-			"src/IntIdWorker.cc",
       "src/SendRawCommandWorker.cc",
-      "src/AddDeviceWorker.cc"
   	],
     "conditions": [
         ['OS=="mac"', {

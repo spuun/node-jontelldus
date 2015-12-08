@@ -10,6 +10,8 @@
 #include "IntIdWorker.h"
 #include "SendRawCommandWorker.h"
 #include "AddDeviceWorker.h"
+#include "UpdateDeviceWorker.h"
+#include "RemoveDeviceWorker.h"
 
 namespace JonTelldus {
 
@@ -184,6 +186,35 @@ namespace JonTelldus {
       info.GetReturnValue().Set(Nan::Undefined());
     }
   }
+  NAN_METHOD(updateDevice) {    
+    if (info.Length() < 1 || !info[0]->IsInt32()) {
+      Nan::ThrowSyntaxError("Missing device id or not an integer value");
+    }
+    if (info.Length() < 2 || !info[1]->IsObject()) {
+      Nan::ThrowSyntaxError("Missing device configuration object.");
+      return;
+    }
+
+    UpdateDeviceWorker *worker = UpdateDeviceWorker::CreateFromArguments(info);
+    if (worker != 0) {
+      Nan::AsyncQueueWorker(worker);
+      info.GetReturnValue().Set(Nan::Undefined());
+    }
+  }
+  NAN_METHOD(removeDevice) {    
+    if (info.Length() < 1 || !info[0]->IsInt32()) {
+      Nan::ThrowSyntaxError("Missing device id or not an integer value");
+    }
+
+    Nan::Callback *callback = 0;
+    if (info.Length() > 1 && info[1]->IsFunction()) {
+      callback = new Nan::Callback(info[1].As<v8::Function>());
+    }
+    
+    RemoveDeviceWorker *worker = new RemoveDeviceWorker(callback, info[0]->IntegerValue());
+    Nan::AsyncQueueWorker(worker);
+    info.GetReturnValue().Set(Nan::Undefined());
+  }
 
   INT_ID_METHOD(up, tdUp);
   INT_ID_METHOD(down, tdDown);
@@ -210,6 +241,8 @@ namespace JonTelldus {
     ADD_METHOD(target, addDeviceEventListener);
     ADD_METHOD(target, sendRawCommand);
     ADD_METHOD(target, addDevice);
+    ADD_METHOD(target, updateDevice);
+    ADD_METHOD(target, removeDevice);
 
     ADD_ENUM(target, "sensorValueType", sensorValueTypes);
     ADD_ENUM(target, "method", methods);

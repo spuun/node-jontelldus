@@ -7,16 +7,9 @@
 #include <map>
 #include <string>
 #include "JonTelldus.h"
+#include "Device.h"
 
 namespace JonTelldus {
-
-  struct Device {
-    int id;
-    std::string name;
-    std::string protocol;
-    std::string model;
-    std::map<std::string, std::string> parameters;
-  };
 
   class GetDevicesWorker : public Nan::AsyncWorker {
     private:		

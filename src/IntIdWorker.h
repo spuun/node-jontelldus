@@ -2,8 +2,10 @@
 #define _IntIdWorker_h_
 
 #include "JonTelldus.h"
+#include "WorkerBase.h"
+
 namespace JonTelldus {
-  class IntIdWorker : public Nan::AsyncWorker
+  class IntIdWorker : public WorkerBase
   {
     private:
       int (*fn)(int);

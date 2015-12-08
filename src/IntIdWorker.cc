@@ -2,7 +2,7 @@
 namespace JonTelldus {
 
   IntIdWorker::IntIdWorker(Nan::Callback *callback, int (*fn_)(int), int id_)
-    : Nan::AsyncWorker(callback), fn(fn_), id(id_) {}
+    : WorkerBase(callback), fn(fn_), id(id_) {}
 
   void IntIdWorker::Execute() {
     int result = fn(id);

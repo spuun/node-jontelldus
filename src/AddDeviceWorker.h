@@ -2,29 +2,21 @@
 #define _AddDeviceWorker_h_
 
 #include "JonTelldus.h"
+#include "UpdateDeviceWorker.h"
+#include "Device.h"
 
 #include <string>
 #include <map>
 
 namespace JonTelldus {
 
-class AddDeviceWorker : public Nan::AsyncWorker {
+class AddDeviceWorker : public UpdateDeviceWorker {
   private:
-    std::string name;
-    std::string protocol;
-    std::string model;
     int deviceId;
-    std::map<std::string, std::string> parameters;
   public:
-    AddDeviceWorker(
-      Nan::Callback *callback, 
-      const char *name_,
-      const char *protocol_,
-      const char *model_,
-      const std::map<std::string, std::string>& parameters_);
-
+    AddDeviceWorker(Nan::Callback *callback, const Device& device);
+      
     void Execute();
-    void HandleOKCallback();
 
     static AddDeviceWorker * CreateFromArguments(Nan::NAN_METHOD_ARGS_TYPE info);
 };
