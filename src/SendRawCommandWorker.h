@@ -2,9 +2,11 @@
 #define _SendRawCommandWorker_h_
 
 #include "JonTelldus.h"
+#include "WorkerBase.h"
+
 #include <string>
 namespace JonTelldus {
-  class SendRawCommandWorker: public Nan::AsyncWorker
+  class SendRawCommandWorker: public WorkerBase
   {
     private:
       std::string rawCommand;

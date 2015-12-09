@@ -18,10 +18,14 @@ Under development, poorly tested. I've used node 5.1.0.
 | [execute](#user-content-execute)(deviceId, callback(error)) | send execute command to device |
 | [stop](#user-content-stop)(deviceId, callback(error)) | send stop command to device |
 | [learn](#user-content-learn)(deviceId, callback(error)) | send learn command for device |
-| [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener)(callback(data)) | add a raw device event listener |
-| [addSensorEventListener](#user-content-addsensoreventlistener)(callback(sensorEventData)) | add a sensor event listener |
-| [addDeviceEventListener](#user-content-adddeviceeventlistener)(callback(deviceEventData)) | add a device event listener |
+| [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener)(listener(data)) | add a raw device event listener |
+| [addSensorEventListener](#user-content-addsensoreventlistener)(listener(sensorEventData)) | add a sensor event listener |
+| [addDeviceEventListener](#user-content-adddeviceeventlistener)(listener(deviceEventData)) | add a device event listener |
+| [removeRawDeviceEventListener](#user-content-removerawdeviceeventlistener)(listener, callback(err)) | remove a raw device event listener |
+| [removeDeviceEventListener](#user-content-removedeviceeventlistener)(listener, callback(err)) | remove a device event listener |
+| [removeSensorEventListener](#user-content-sensordeviceeventlistener)(listener, callback(err)) | remove a sensor event listener |
 | [sendRawCommand](#user-content-sendrawcommand)(command, callback(error)) | send raw device command |
+
 
 ## Properties
 | property | description |

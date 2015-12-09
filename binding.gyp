@@ -4,6 +4,7 @@
     "target_name": "jontelldus",
     "sources": [ 
   		"src/JonTelldus.cc",
+      "src/ListenerRegister.cc",
       "src/WorkerBase.cc",
       "src/QueueInvoker.cc",
       "src/Device.cc",
@@ -12,6 +13,7 @@
       "src/RemoveDeviceWorker.cc",
       "src/GetDevicesWorker.cc",
       "src/IntIdWorker.cc",
+      "src/RemoveListenerWorker.cc",
   		"src/RawDeviceEventCallbackInvoker.cc",
       "src/SensorEventCallbackInvoker.cc",
       "src/DeviceEventCallbackInvoker.cc",

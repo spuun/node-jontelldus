@@ -12,8 +12,15 @@
 #include "AddDeviceWorker.h"
 #include "UpdateDeviceWorker.h"
 #include "RemoveDeviceWorker.h"
+#include "ListenerRegister.h"
+#include "Singleton.h"
+#include "RemoveListenerWorker.h"
 
 namespace JonTelldus {
+
+  template class Singleton<ListenerRegister, Raw>;
+  template class Singleton<ListenerRegister, Sensor>;
+  template class Singleton<ListenerRegister, Device>;
 
   const std::string deviceParameterNames[7] = {
     "devices",
@@ -107,8 +114,9 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
+    ListenerRegister& reg = Singleton<ListenerRegister, Device>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    tdRegisterDeviceEvent(&deviceEventCallback, callback);
+    reg.Register(callback, tdRegisterDeviceEvent(&deviceEventCallback, callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
   void sensorEventCallback(
@@ -129,8 +137,9 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
+    ListenerRegister& reg = Singleton<ListenerRegister, Sensor>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    tdRegisterSensorEvent(&sensorEventCallback, callback);
+    reg.Register(callback, tdRegisterSensorEvent(&sensorEventCallback, callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
@@ -144,10 +153,42 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("argument must be function");
       return;
     }
+    ListenerRegister& reg = Singleton<ListenerRegister, Raw>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    tdRegisterRawDeviceEvent(&rawDeviceEventCallback, callback);
+    reg.Register(callback, tdRegisterRawDeviceEvent(&rawDeviceEventCallback, callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
+
+  Nan::NAN_METHOD_RETURN_TYPE removeListener(Nan::NAN_METHOD_ARGS_TYPE info, ListenerRegister& reg) {
+    if (info.Length() < 1 || !info[0]->IsFunction()) {
+      Nan::ThrowSyntaxError("First argument must be function");
+      return;
+    }
+    info.GetReturnValue().Set(Nan::Undefined());
+    
+    int tdid = reg.UnRegister(info[0].As<v8::Function>());
+    Nan::Callback *callback = 0;
+    if (info.Length() > 1 && info[1]->IsFunction()) {
+      callback = new Nan::Callback(info[1].As<v8::Function>());
+    }
+    if (tdid == 0) {
+      if (callback != 0)
+        callback->Call(0, NULL);
+      return;
+    }
+    Nan::AsyncQueueWorker(new RemoveListenerWorker(callback, tdid));
+  }
+
+  NAN_METHOD(removeRawDeviceEventListener) {
+    removeListener(info, Singleton<ListenerRegister, Raw>::getInstance());
+  }
+  NAN_METHOD(removeDeviceEventListener) {
+    removeListener(info, Singleton<ListenerRegister, Device>::getInstance());
+  }
+  NAN_METHOD(removeSensorEventListener) {
+    removeListener(info, Singleton<ListenerRegister, Sensor>::getInstance());
+  }
+
 
   NAN_METHOD(getDevices) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
@@ -210,7 +251,7 @@ namespace JonTelldus {
     if (info.Length() > 1 && info[1]->IsFunction()) {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
-    
+
     RemoveDeviceWorker *worker = new RemoveDeviceWorker(callback, info[0]->IntegerValue());
     Nan::AsyncQueueWorker(worker);
     info.GetReturnValue().Set(Nan::Undefined());
@@ -237,8 +278,11 @@ namespace JonTelldus {
     ADD_METHOD(target, stop);
     ADD_METHOD(target, learn);
     ADD_METHOD(target, addRawDeviceEventListener);
+    ADD_METHOD(target, removeRawDeviceEventListener);
     ADD_METHOD(target, addSensorEventListener);
+    ADD_METHOD(target, removeSensorEventListener);
     ADD_METHOD(target, addDeviceEventListener);
+    ADD_METHOD(target, removeDeviceEventListener);
     ADD_METHOD(target, sendRawCommand);
     ADD_METHOD(target, addDevice);
     ADD_METHOD(target, updateDevice);

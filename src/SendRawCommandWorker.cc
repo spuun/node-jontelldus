@@ -3,7 +3,7 @@
 namespace JonTelldus {
 
   SendRawCommandWorker::SendRawCommandWorker(Nan::Callback *callback, char* rawCommand_)
-    : Nan::AsyncWorker(callback), rawCommand(rawCommand_) {}
+    : WorkerBase(callback), rawCommand(rawCommand_) {}
 
   void SendRawCommandWorker::Execute() {
     int result = tdSendRawCommand(rawCommand.c_str(), 0);
