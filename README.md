@@ -69,7 +69,7 @@ jtelldus.addDevice(device, (err, deviceId) => {
 ```javascript
 var jtelldus = require('jontelldus');
 
-jtelldus.addDevice(1, (err) => {
+jtelldus.removeDevice(1, (err) => {
   if (!err) {
     console.log('Device 1 removed');
   }
@@ -86,7 +86,7 @@ var device = {
     unit: 3
   }
 };
-jtelldus.addDevice(1, device (err, deviceId) => {
+jtelldus.updateDevice(1, device (err, deviceId) => {
   if (!err) {
     console.log('Device updated. Id = ' + deviceId);
   }
