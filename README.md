@@ -38,7 +38,7 @@ Under development, poorly tested. I've used node 5.1.0.
 Code examples is probably better than wall of text.
 
 ### getDevices
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.getDevices((devices) => {
   console.log(devices);
@@ -46,7 +46,7 @@ jtelldus.getDevices((devices) => {
 ```
 
 ### addDevice
-```
+```javascript
 var jtelldus = require('jontelldus');
 var device = {
   name: "Lamp",
@@ -66,7 +66,7 @@ jtelldus.addDevice(device, (err, deviceId) => {
 
 
 ### removeDevice
-```
+```javascript
 var jtelldus = require('jontelldus');
 
 jtelldus.addDevice(1, (err) => {
@@ -77,7 +77,7 @@ jtelldus.addDevice(1, (err) => {
 ```
 
 ### updateDevice
-```
+```javascript
 var jtelldus = require('jontelldus');
 var device = {
   name: 'Blue lamp'
@@ -86,7 +86,7 @@ var device = {
     unit: 3
   }
 };
-jtelldus.addDevice(1,, device (err, deviceId) => {
+jtelldus.addDevice(1, device (err, deviceId) => {
   if (!err) {
     console.log('Device updated. Id = ' + deviceId);
   }
@@ -94,7 +94,7 @@ jtelldus.addDevice(1,, device (err, deviceId) => {
 ```
 
 ### turnOn 
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.turnOn(1, (error) => {
   if (!error) {
@@ -104,7 +104,7 @@ jtelldus.turnOn(1, (error) => {
 ```
 
 ### turnOff 
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.turnOff(1, (error) => {
   if (!error) {
@@ -114,7 +114,7 @@ jtelldus.turnOff(1, (error) => {
 ```
 
 ### up 
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.up(1, (error) => {
   if (!error) {
@@ -124,7 +124,7 @@ jtelldus.up(1, (error) => {
 ```
 
 ### down
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.down(1, (error) => {
   if (!error) {
@@ -134,7 +134,7 @@ jtelldus.down(1, (error) => {
 ```
 
 ### bell 
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.bell(1, (error) => {
   if (!error) {
@@ -144,7 +144,7 @@ jtelldus.bell(1, (error) => {
 ```
 
 ### execute 
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.execute(1, (error) => {
   if (!error) {
@@ -154,7 +154,7 @@ jtelldus.execute(1, (error) => {
 ```
 
 ### stop
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.stop(1, (error) => {
   if (!error) {
@@ -164,7 +164,7 @@ jtelldus.stop(1, (error) => {
 ```
 
 ### learn
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.learn(1, (error) => {
   if (!error) {
@@ -174,7 +174,7 @@ jtelldus.learn(1, (error) => {
 ```
 
 ### addRawDeviceEventListener
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.addRawDeviceEventListener((event) => {
   console.log('RAW EVENT', event);
@@ -182,7 +182,7 @@ jtelldus.addRawDeviceEventListener((event) => {
 ```
 
 ### addSensorEventListener
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.addSensorEventListener((event) => {
   console.log('SENSOR EVENT', event);
@@ -190,7 +190,7 @@ jtelldus.addSensorEventListener((event) => {
 ```
 
 ### addDeviceEventListener
-```
+```javascript
 var jtelldus = require('jontelldus');
 jtelldus.addDeviceEventListener((event) => {
   console.log('DEVICE EVENT', event);
@@ -198,7 +198,7 @@ jtelldus.addDeviceEventListener((event) => {
 ```
 
 ### sendRawCommand
-```
+```javascript
 var jtelldus = require('jontelldus');
 var command = 'class:command;protocol:waveman;model:codeswitch;house:A;unit:1;method:turnoff;';
 jtelldus.sendRawCommand(command, (error) => {
