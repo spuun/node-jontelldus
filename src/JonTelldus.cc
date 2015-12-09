@@ -172,8 +172,12 @@ namespace JonTelldus {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
     if (tdid == 0) {
-      if (callback != 0)
-        callback->Call(0, NULL);
+      if (callback != 0){
+        v8::Handle<v8::Value> argv[] =  {
+          Nan::Error("Listener is not registered")
+        };
+        callback->Call(1, argv);
+      }
       return;
     }
     Nan::AsyncQueueWorker(new RemoveListenerWorker(callback, tdid));
