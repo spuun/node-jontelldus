@@ -86,7 +86,7 @@ var device = {
     unit: 3
   }
 };
-jtelldus.updateDevice(1, device (err, deviceId) => {
+jtelldus.updateDevice(1, device, (err, deviceId) => {
   if (!err) {
     console.log('Device updated. Id = ' + deviceId);
   }
