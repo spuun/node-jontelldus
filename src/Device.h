@@ -5,6 +5,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 namespace JonTelldus {
 
@@ -16,6 +17,7 @@ namespace JonTelldus {
       std::string model;
       std::string protocol;
       std::map<std::string, std::string> parameters;
+      std::vector<std::string> methods;
      
       static Device CreateFromObject(v8::Local<v8::Object> object);
       static void UpdateDevice(const Device& device);

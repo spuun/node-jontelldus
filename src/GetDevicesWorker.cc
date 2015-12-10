@@ -38,6 +38,13 @@ namespace JonTelldus {
           device->parameters[key] = paramStrValue; 
         }
       }
+
+      int supportedMethods = tdMethods(device->id, 0xFFFF);      
+      for (auto& method: methods) {
+        if (supportedMethods & method.value) {
+          device->methods.push_back(method.key);
+        }
+      }
       _devices.push_back(device);
     }
   }
@@ -57,6 +64,11 @@ namespace JonTelldus {
           Set(paramObj, it->first.c_str(), it->second.c_str());
         }
         Set(deviceObj, "parameters", paramObj);
+        v8::Local<v8::Array> methodArr = Nan::New<v8::Array>();
+        for (auto it = device->methods.begin(); it != device->methods.end(); ++it) {
+          Set(methodArr, (int)methodArr->Length(), it->c_str());
+        }
+        Set(deviceObj, "methods", methodArr);
         Set(ret, ret->Length(), deviceObj);
         delete device;
         });

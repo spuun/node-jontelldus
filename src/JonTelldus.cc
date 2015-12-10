@@ -15,6 +15,7 @@
 #include "ListenerRegister.h"
 #include "Singleton.h"
 #include "RemoveListenerWorker.h"
+#include "DimDeviceWorker.h"
 
 namespace JonTelldus {
 
@@ -111,7 +112,7 @@ namespace JonTelldus {
 
   NAN_METHOD(addDeviceEventListener) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
-      Nan::ThrowSyntaxError("argument must be function");
+      Nan::ThrowSyntaxError("Argument must be function");
       return;
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Device>::getInstance();
@@ -134,7 +135,7 @@ namespace JonTelldus {
 
   NAN_METHOD(addSensorEventListener) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
-      Nan::ThrowSyntaxError("argument must be function");
+      Nan::ThrowSyntaxError("Argument must be function");
       return;
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Sensor>::getInstance();
@@ -150,7 +151,7 @@ namespace JonTelldus {
 
   NAN_METHOD(addRawDeviceEventListener) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
-      Nan::ThrowSyntaxError("argument must be function");
+      Nan::ThrowSyntaxError("Argument must be function");
       return;
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Raw>::getInstance();
@@ -196,7 +197,7 @@ namespace JonTelldus {
 
   NAN_METHOD(getDevices) {
     if (info.Length() < 1 || !info[0]->IsFunction()) {
-      Nan::ThrowSyntaxError("argument must be function");
+      Nan::ThrowSyntaxError("Argument must be function");
       return;
     }
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
@@ -249,6 +250,7 @@ namespace JonTelldus {
   NAN_METHOD(removeDevice) {    
     if (info.Length() < 1 || !info[0]->IsInt32()) {
       Nan::ThrowSyntaxError("Missing device id or not an integer value");
+      return;
     }
 
     Nan::Callback *callback = 0;
@@ -257,6 +259,21 @@ namespace JonTelldus {
     }
 
     RemoveDeviceWorker *worker = new RemoveDeviceWorker(callback, info[0]->IntegerValue());
+    Nan::AsyncQueueWorker(worker);
+    info.GetReturnValue().Set(Nan::Undefined());
+  }
+
+  NAN_METHOD(dim) {
+    if (info.Length() < 2 || !info[0]->IsInt32() || !info[1]->IsInt32()) {
+      Nan::ThrowSyntaxError("Id and level must be integers");
+      return;
+    }
+    Nan::Callback *callback = 0;
+    if (info.Length() > 2 && info[2]->IsFunction()) {
+      callback = new Nan::Callback(info[2].As<v8::Function>());
+    }
+
+    DimDeviceWorker *worker = new DimDeviceWorker(callback, info[0]->IntegerValue(), info[1]->IntegerValue());
     Nan::AsyncQueueWorker(worker);
     info.GetReturnValue().Set(Nan::Undefined());
   }
@@ -281,6 +298,7 @@ namespace JonTelldus {
     ADD_METHOD(target, execute);
     ADD_METHOD(target, stop);
     ADD_METHOD(target, learn);
+    ADD_METHOD(target, dim);
     ADD_METHOD(target, addRawDeviceEventListener);
     ADD_METHOD(target, removeRawDeviceEventListener);
     ADD_METHOD(target, addSensorEventListener);

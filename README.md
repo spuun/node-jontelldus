@@ -14,16 +14,17 @@ Under development, poorly tested. I've used node 5.1.0.
 | [turnOff](#user-content-turnoff)(deviceId, callback(error)) | send off command to device |
 | [up](#user-content-up)(deviceId, callback(error)) | send up command to device |
 | [down](#user-content-down)(deviceId, callback(error)) | send down command to device |
+| [dim](#user-content-dim)(deviceId, level, callback(error)) | send dim command to device |
 | [bell](#user-content-bell)(deviceId, callback(error)) | send bell command to device |
 | [execute](#user-content-execute)(deviceId, callback(error)) | send execute command to device |
 | [stop](#user-content-stop)(deviceId, callback(error)) | send stop command to device |
 | [learn](#user-content-learn)(deviceId, callback(error)) | send learn command for device |
-| [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener)(listener(data)) | add a raw device event listener |
-| [addSensorEventListener](#user-content-addsensoreventlistener)(listener(sensorEventData)) | add a sensor event listener |
-| [addDeviceEventListener](#user-content-adddeviceeventlistener)(listener(deviceEventData)) | add a device event listener |
-| [removeRawDeviceEventListener](#user-content-removerawdeviceeventlistener)(listener, callback(err)) | remove a raw device event listener |
-| [removeDeviceEventListener](#user-content-removedeviceeventlistener)(listener, callback(err)) | remove a device event listener |
-| [removeSensorEventListener](#user-content-sensordeviceeventlistener)(listener, callback(err)) | remove a sensor event listener |
+| [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener--removerawdeviceeventlistener)(listener(data)) | add a raw device event listener |
+| [addSensorEventListener](#user-content-addsensoreventlistener--removesensoreventlistener)(listener(sensorEventData)) | add a sensor event listener |
+| [addDeviceEventListener](#user-content-adddeviceeventlistener--removedeviceeventlistener)(listener(deviceEventData)) | add a device event listener |
+| [removeRawDeviceEventListener](#user-content-addrawdeviceeventlistener--removerawdeviceeventlistener)(listener, callback(err)) | remove a raw device event listener |
+| [removeDeviceEventListener](#user-content-adddeviceeventlistener--removedeviceeventlistener)(listener, callback(err)) | remove a device event listener |
+| [removeSensorEventListener](#user-content-addsensoreventlistener--sensordeviceeventlistener)(listener, callback(err)) | remove a sensor event listener |
 | [sendRawCommand](#user-content-sendrawcommand)(command, callback(error)) | send raw device command |
 
 
@@ -133,6 +134,16 @@ jtelldus.down(1, (error) => {
 });
 ```
 
+### dim
+```javascript
+var jtelldus = require('jontelldus');
+jtelldus.dim(1, 30, (error) => {
+  if (!error) {
+    console.log('Dim set to level 30 for device 1');
+  }
+});
+```
+
 ### bell 
 ```javascript
 var jtelldus = require('jontelldus');
@@ -173,28 +184,34 @@ jtelldus.learn(1, (error) => {
 });
 ```
 
-### addRawDeviceEventListener
+### addRawDeviceEventListener / removeRawDeviceEventListener
 ```javascript
 var jtelldus = require('jontelldus');
-jtelldus.addRawDeviceEventListener((event) => {
+var listener = (event) => {
   console.log('RAW EVENT', event);
-});
+};
+jtelldus.addRawDeviceEventListener(listener);
+jtelldus.removeRawDeviceEventListener(listener);
 ```
 
-### addSensorEventListener
+### addSensorEventListener / removeSensorEventListsner
 ```javascript
 var jtelldus = require('jontelldus');
-jtelldus.addSensorEventListener((event) => {
+var listener = (event) => {
   console.log('SENSOR EVENT', event);
-});
+};
+jtelldus.addSensorEventListener(listener);
+jtelldus.removeSensorEventListener(listener);
 ```
 
-### addDeviceEventListener
+### addDeviceEventListener / removeDeviceEventListener
 ```javascript
 var jtelldus = require('jontelldus');
-jtelldus.addDeviceEventListener((event) => {
+var listener = (event) => {
   console.log('DEVICE EVENT', event);
-});
+};
+jtelldus.addDeviceEventListener(listener);
+jtelldus.removeDeviceEventListener(listener);
 ```
 
 ### sendRawCommand

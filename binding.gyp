@@ -18,6 +18,7 @@
       "src/SensorEventCallbackInvoker.cc",
       "src/DeviceEventCallbackInvoker.cc",
       "src/SendRawCommandWorker.cc",
+      "src/DimDeviceWorker.cc"
   	],
     "conditions": [
         ['OS=="mac"', {
