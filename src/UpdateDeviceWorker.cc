@@ -32,15 +32,18 @@ namespace JonTelldus {
   }
 
   UpdateDeviceWorker *UpdateDeviceWorker::CreateFromArguments(Nan::NAN_METHOD_ARGS_TYPE info) {
-    v8::Local<v8::Number> deviceId = info[0]->ToNumber();
-    v8::Local<v8::Object> deviceObj = info[1]->ToObject();
+    v8::Local<v8::Object> deviceObj = info[0]->ToObject();
   
+    if (!Has(deviceObj, "id")) {
+      Nan::ThrowError("Missing device id.");
+      return static_cast<UpdateDeviceWorker*>(0);
+    }
+
     Device device = Device::CreateFromObject(deviceObj);
-    device.id = deviceId->IntegerValue(); 
 
     Nan::Callback *callback = 0;
-    if (info.Length() > 2 && info[2]->IsFunction()) {
-      callback = new Nan::Callback(info[2].As<v8::Function>());
+    if (info.Length() > 1 && info[1]->IsFunction()) {
+      callback = new Nan::Callback(info[1].As<v8::Function>());
     }
     return new UpdateDeviceWorker(callback, device);
   }

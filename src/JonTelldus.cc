@@ -93,7 +93,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("Callback must be function, duh"); \
       return; \
     } \
-    Nan::Callback *callback = 0; \
+    Nan::Callback *callback = static_cast<Nan::Callback *>(0); \
     if (info.Length() > 1 && info[1]->IsFunction()) \
       callback = new Nan::Callback(info[1].As<v8::Function>()); \
     Nan::AsyncQueueWorker(new IntIdWorker(callback, fn, info[0]->IntegerValue())); \
@@ -168,7 +168,7 @@ namespace JonTelldus {
     info.GetReturnValue().Set(Nan::Undefined());
     
     int tdid = reg.UnRegister(info[0].As<v8::Function>());
-    Nan::Callback *callback = 0;
+    Nan::Callback *callback = static_cast<Nan::Callback *>(0);
     if (info.Length() > 1 && info[1]->IsFunction()) {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
@@ -211,7 +211,7 @@ namespace JonTelldus {
       return;
     }
 
-    Nan::Callback *callback = 0;
+    Nan::Callback *callback = static_cast<Nan::Callback *>(0);
     if (info.Length() > 1 && info[1]->IsFunction()) {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
@@ -233,10 +233,7 @@ namespace JonTelldus {
     }
   }
   NAN_METHOD(updateDevice) {    
-    if (info.Length() < 1 || !info[0]->IsInt32()) {
-      Nan::ThrowSyntaxError("Missing device id or not an integer value");
-    }
-    if (info.Length() < 2 || !info[1]->IsObject()) {
+    if (info.Length() < 1 || !info[0]->IsObject()) {
       Nan::ThrowSyntaxError("Missing device configuration object.");
       return;
     }
@@ -244,8 +241,8 @@ namespace JonTelldus {
     UpdateDeviceWorker *worker = UpdateDeviceWorker::CreateFromArguments(info);
     if (worker != 0) {
       Nan::AsyncQueueWorker(worker);
-      info.GetReturnValue().Set(Nan::Undefined());
     }
+    info.GetReturnValue().Set(Nan::Undefined());
   }
   NAN_METHOD(removeDevice) {    
     if (info.Length() < 1 || !info[0]->IsInt32()) {
@@ -253,7 +250,7 @@ namespace JonTelldus {
       return;
     }
 
-    Nan::Callback *callback = 0;
+    Nan::Callback *callback = static_cast<Nan::Callback *>(0);
     if (info.Length() > 1 && info[1]->IsFunction()) {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
@@ -268,7 +265,7 @@ namespace JonTelldus {
       Nan::ThrowSyntaxError("Id and level must be integers");
       return;
     }
-    Nan::Callback *callback = 0;
+    Nan::Callback *callback = static_cast<Nan::Callback *>(0);
     if (info.Length() > 2 && info[2]->IsFunction()) {
       callback = new Nan::Callback(info[2].As<v8::Function>());
     }

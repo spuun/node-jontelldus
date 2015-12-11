@@ -4,6 +4,9 @@ namespace JonTelldus {
 
   Device Device::CreateFromObject(v8::Local<v8::Object> deviceObj) {
     Device device;
+    if (Has(deviceObj, "id")) {
+      device.id = Get(deviceObj, "id").ToLocalChecked()->IntegerValue();
+    }
     if (Has(deviceObj, "name")) {
       v8::String::Utf8Value name(Get(deviceObj, "name").ToLocalChecked()->ToString());
       device.name = *name;

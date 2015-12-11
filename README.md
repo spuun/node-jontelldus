@@ -9,7 +9,7 @@ Under development, poorly tested. I've used node 5.1.0.
 | [getDevices](#user-content-getdevices)(callback(devices)) | get all devices |
 | [addDevice](#user-content-adddevice)(deviceConfiguration, callback(deviceId) | add a new device |
 | [removeDevice](#user-content-removedevice)(deviceId, callback(err)) | remove a device |
-| [updateDevice](#user-content-updatedevice)(deviceId, deviceConfiguration, callback(err, deviceId)) | update a device |
+| [updateDevice](#user-content-updatedevice)(deviceConfiguration, callback(err, deviceId)) | update a device |
 | [turnOn](#user-content-turnon)(deviceId, callback(error)) | send on command to device | 
 | [turnOff](#user-content-turnoff)(deviceId, callback(error)) | send off command to device |
 | [up](#user-content-up)(deviceId, callback(error)) | send up command to device |
@@ -81,13 +81,14 @@ jtelldus.removeDevice(1, (err) => {
 ```javascript
 var jtelldus = require('jontelldus');
 var device = {
+  id: 1, // id is required!
   name: 'Blue lamp'
   parameters: {
     house: 10,
     unit: 3
   }
 };
-jtelldus.updateDevice(1, device, (err, deviceId) => {
+jtelldus.updateDevice(device, (err, deviceId) => {
   if (!err) {
     console.log('Device updated. Id = ' + deviceId);
   }
