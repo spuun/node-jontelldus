@@ -21,10 +21,11 @@ namespace JonTelldus {
     }
     if (Has(deviceObj, "parameters")) {
       v8::Local<v8::Object> parametersObj = Get(deviceObj, "parameters").ToLocalChecked()->ToObject();
-      for (auto& key: deviceParameterNames) {
-        if (Has(parametersObj, key.c_str())) {
-          v8::String::Utf8Value parameterValue(Get(parametersObj, key.c_str()).ToLocalChecked()->ToString());
-          device.parameters[key] = std::string(*parameterValue);
+      for (jstrarray::iterator it = deviceParameterNames.begin(); 
+            it != deviceParameterNames.end(); ++it) {
+        if (Has(parametersObj, it->c_str())) {
+          v8::String::Utf8Value parameterValue(Get(parametersObj, it->c_str()).ToLocalChecked()->ToString());
+          device.parameters[*it] = std::string(*parameterValue);
         }
       }
     }
@@ -42,8 +43,9 @@ namespace JonTelldus {
     if (device.model.length() > 0) {
       tdSetModel(device.id, device.model.c_str());
     }
-    for (auto& key: deviceParameterNames) {
-      auto it = device.parameters.find(key);
+    for (jstrarray::iterator name = deviceParameterNames.begin();
+        name != deviceParameterNames.end(); ++name) {
+      std::map<std::string, std::string>::const_iterator it = device.parameters.find(*name);
       if (it != device.parameters.end()) {
         tdSetDeviceParameter(device.id, it->first.c_str(), it->second.c_str());
       }

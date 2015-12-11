@@ -30,19 +30,20 @@ namespace JonTelldus {
       tdReleaseString(protocol);
       tdReleaseString(model);
 
-      for (auto& key: deviceParameterNames) {
-        char *paramValue = tdGetDeviceParameter(device->id, key.c_str(), "");
+      for (jstrarray::iterator name = deviceParameterNames.begin();
+          name != deviceParameterNames.end(); ++name) {
+        char *paramValue = tdGetDeviceParameter(device->id, name->c_str(), "");
         std::string paramStrValue(paramValue);
         tdReleaseString(paramValue);
         if (paramStrValue.length() > 0) {
-          device->parameters[key] = paramStrValue; 
+          device->parameters[*name] = paramStrValue; 
         }
       }
 
       int supportedMethods = tdMethods(device->id, 0xFFFF);      
-      for (auto& method: methods) {
-        if (supportedMethods & method.value) {
-          device->methods.push_back(method.key);
+      for (jenum::iterator it = methods.begin(); it!= methods.end(); ++it) {
+        if (supportedMethods & it->second) {
+          device->methods.push_back(it->first);
         }
       }
       _devices.push_back(device);
@@ -52,27 +53,30 @@ namespace JonTelldus {
   void GetDevicesWorker::HandleOKCallback() {
     v8::Local<v8::Array> ret = Nan::New<v8::Array>();
 
-    std::for_each(_devices.begin(), _devices.end(), [ret](Device* device) {
-        v8::Local<v8::Object> deviceObj = Nan::New<v8::Object>();
-        Set(deviceObj, "id", device->id);
-        Set(deviceObj, "name", device->name.c_str());
-        Set(deviceObj, "protocol", device->protocol.c_str());
-        Set(deviceObj, "model", device->model.c_str());
+    std::vector<Device*>::iterator deviceIt;    
+    for (deviceIt = _devices.begin(); deviceIt != _devices.end(); ++deviceIt) {
+      Device *device = *deviceIt;
+      v8::Local<v8::Object> deviceObj = Nan::New<v8::Object>();
+      Set(deviceObj, "id", device->id);
+      Set(deviceObj, "name", device->name.c_str());
+      Set(deviceObj, "protocol", device->protocol.c_str());
+      Set(deviceObj, "model", device->model.c_str());
 
-        v8::Local<v8::Object> paramObj = Nan::New<v8::Object>();
-        for (auto it = device->parameters.begin(); it != device->parameters.end(); ++it) {
-          Set(paramObj, it->first.c_str(), it->second.c_str());
-        }
-        Set(deviceObj, "parameters", paramObj);
-        v8::Local<v8::Array> methodArr = Nan::New<v8::Array>();
-        for (auto it = device->methods.begin(); it != device->methods.end(); ++it) {
-          Set(methodArr, (int)methodArr->Length(), it->c_str());
-        }
-        Set(deviceObj, "methods", methodArr);
-        Set(ret, ret->Length(), deviceObj);
-        delete device;
-        });
-
+      v8::Local<v8::Object> paramObj = Nan::New<v8::Object>();
+      std::map<std::string, std::string>::iterator it;
+      for (it = device->parameters.begin(); it != device->parameters.end(); ++it) {
+        Set(paramObj, it->first.c_str(), it->second.c_str());
+      }
+      Set(deviceObj, "parameters", paramObj);
+      v8::Local<v8::Array> methodArr = Nan::New<v8::Array>();
+      for (jstrarray::iterator it = device->methods.begin(); it != device->methods.end(); ++it) {
+        Set(methodArr, (int)methodArr->Length(), it->c_str());
+      }
+      Set(deviceObj, "methods", methodArr);
+      Set(ret, ret->Length(), deviceObj);
+      delete device;
+    };
+ 
     v8::Handle<v8::Value> argv[] = {
       ret
     };

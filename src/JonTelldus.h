@@ -5,17 +5,58 @@
 #include <nan.h>
 #include <telldus-core.h>
 
+#include <map>
+#include <utility>
+#include <vector>
+#include <string>
+
 namespace JonTelldus {
 
-  typedef struct pair {
-    const char *key;
-    int value;
-  } pair_t;
+  template<typename K, typename V>
+  class create_map
+  {
+    private:
+      std::map<K,V> map;
+    public:
+      create_map(const K& key, const V& value) {
+        map[key] = value;
+      }
+      create_map<K, V>& operator()(const K& key, const V& value) {
+        map[key] = value;
+        return *this;
+      }
+      operator std::map<K, V>() {
+        return map;
+      }
+  };
 
-  extern const std::string deviceParameterNames[7];
-  extern pair_t sensorValueTypes[7];
-  extern pair_t methods[9];
-  extern pair_t errorCodes[12];
+  template<typename V>
+  class create_vector
+  {
+    private:
+      std::vector<V> vec;
+    public:
+      create_vector(const V& value) {
+        vec.push_back(value);
+      }
+      create_vector<V>& operator() (const V& value) {
+        vec.push_back(value);
+        return *this;
+      }
+      operator std::vector<V>() {
+        return vec;
+      }
+  };
+
+  typedef create_map<std::string, int> create_jenum;
+  typedef std::map<std::string, int> jenum;
+  typedef create_vector<std::string> create_jstrarray;
+  typedef std::vector<std::string> jstrarray;
+
+  extern jenum sensorValueTypes;
+  extern jenum methods;
+  extern jenum errorCodes;
+  extern jstrarray deviceParameterNames;
 
   inline extern
   Nan::Maybe<bool> Set(

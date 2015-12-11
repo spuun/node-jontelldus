@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string>
 #include <map>
 
@@ -23,61 +24,59 @@ namespace JonTelldus {
   template class Singleton<ListenerRegister, Sensor>;
   template class Singleton<ListenerRegister, Device>;
 
-  const std::string deviceParameterNames[7] = {
-    "devices",
-    "house",
-    "unit",
-    "code",
-    "system",
-    "units",
-    "fade"
-  };
+  jstrarray deviceParameterNames = create_jstrarray
+   ("devices")
+   ("house")
+   ("unit")
+   ("code")
+   ("system")
+   ("units")
+   ("fade");
 
-  pair_t sensorValueTypes[7] = {
-    {"Temperature", TELLSTICK_TEMPERATURE },
-    {"Humidity", TELLSTICK_HUMIDITY },
-    {"RainTotal", TELLSTICK_RAINTOTAL },
-    {"RainRate", TELLSTICK_RAINRATE },
-    {"WindDirection", TELLSTICK_WINDDIRECTION },
-    {"WindAverage", TELLSTICK_WINDAVERAGE },
-    {"WindGust", TELLSTICK_WINDGUST }
-  };
-  pair_t methods[9] = {
-    { "TurnOn", TELLSTICK_TURNON },
-    { "TurnOff", TELLSTICK_TURNOFF },
-    { "Bell", TELLSTICK_BELL },
-    { "Toggle", TELLSTICK_TOGGLE },
-    { "Dim", TELLSTICK_DIM },
-    { "Execute", TELLSTICK_EXECUTE },
-    { "Up", TELLSTICK_UP},
-    { "Down", TELLSTICK_DOWN },
-    { "Stop", TELLSTICK_STOP },
-  };
-  pair_t errorCodes[12] = {
-    { "NoError", TELLSTICK_SUCCESS },
-    { "NotFound", TELLSTICK_ERROR_NOT_FOUND }, 
-    { "PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED },
-    { "DeviceNotFound", TELLSTICK_ERROR_DEVICE_NOT_FOUND },
-    { "MethodNotSupported", TELLSTICK_ERROR_METHOD_NOT_SUPPORTED },
-    { "Communication", TELLSTICK_ERROR_COMMUNICATION },
-    { "ConnectingService", TELLSTICK_ERROR_CONNECTING_SERVICE },
-    { "UnknownResponse", TELLSTICK_ERROR_UNKNOWN_RESPONSE },
-    { "Syntax", TELLSTICK_ERROR_SYNTAX },
-    { "BrokenPipe", TELLSTICK_ERROR_BROKEN_PIPE },
-    { "CommunicatingService", TELLSTICK_ERROR_COMMUNICATING_SERVICE },
-    { "Unknown", TELLSTICK_ERROR_UNKNOWN }
-  };
+  jenum methods = create_jenum
+    ("TurnOn", TELLSTICK_TURNON)
+    ("TurnOff", TELLSTICK_TURNOFF)
+    ("Bell", TELLSTICK_BELL)
+    ("Toggle", TELLSTICK_TOGGLE)
+    ("Dim", TELLSTICK_DIM)
+    ("Execute", TELLSTICK_EXECUTE)
+    ("Up", TELLSTICK_UP)
+    ("Down", TELLSTICK_DOWN)
+    ("Stop", TELLSTICK_STOP);
+
+  jenum sensorValueTypes = create_jenum
+    ("Temperature", TELLSTICK_TEMPERATURE)
+    ("Humidity", TELLSTICK_HUMIDITY)
+    ("RainTotal", TELLSTICK_RAINTOTAL)
+    ("RainRate", TELLSTICK_RAINRATE)
+    ("WindDirection", TELLSTICK_WINDDIRECTION)
+    ("WindAverage", TELLSTICK_WINDAVERAGE)
+    ("WindGust", TELLSTICK_WINDGUST);
+
+  jenum errorCodes = create_jenum
+    ("NoError", TELLSTICK_SUCCESS)
+    ("NotFound", TELLSTICK_ERROR_NOT_FOUND)
+    ("PermissionDenied", TELLSTICK_ERROR_PERMISSION_DENIED)
+    ("DeviceNotFound", TELLSTICK_ERROR_DEVICE_NOT_FOUND)
+    ("MethodNotSupported", TELLSTICK_ERROR_METHOD_NOT_SUPPORTED)
+    ("Communication", TELLSTICK_ERROR_COMMUNICATION)
+    ("ConnectingService", TELLSTICK_ERROR_CONNECTING_SERVICE)
+    ("UnknownResponse", TELLSTICK_ERROR_UNKNOWN_RESPONSE)
+    ("Syntax", TELLSTICK_ERROR_SYNTAX)
+    ("BrokenPipe", TELLSTICK_ERROR_BROKEN_PIPE)
+    ("CommunicatingService", TELLSTICK_ERROR_COMMUNICATING_SERVICE)
+    ("Unknown", TELLSTICK_ERROR_UNKNOWN);
+
+  #define ADD_ENUM_MAP(target, name, values)\
+  {\
+    v8::Local<v8::Object> enumObj = Nan::New<v8::Object>();\
+    for (jenum::iterator it = values.begin(); it != values.end(); ++it) \
+      Set(enumObj, it->first.c_str(), it->second, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete)); \
+    Set(target, name, enumObj, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete)); \
+  }
 
   #define ADD_METHOD(target,name) \
     Set(target, #name, Nan::GetFunction(Nan::New<v8::FunctionTemplate>(name)).ToLocalChecked());
-
-  #define ADD_ENUM(target, name, values)\
-  {\
-    v8::Local<v8::Object> enumObj = Nan::New<v8::Object>();\
-    for (auto& item: values)\
-      Set(enumObj, item.key, item.value, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete));\
-    Set(target, name, enumObj, (v8::PropertyAttribute)(v8::ReadOnly|v8::DontDelete)); \
-  }
 
   #define INT_ID_METHOD(name, fn) \
   NAN_METHOD(name) { \
@@ -307,9 +306,9 @@ namespace JonTelldus {
     ADD_METHOD(target, updateDevice);
     ADD_METHOD(target, removeDevice);
 
-    ADD_ENUM(target, "sensorValueType", sensorValueTypes);
-    ADD_ENUM(target, "method", methods);
-    ADD_ENUM(target, "errorCode", errorCodes);
+    ADD_ENUM_MAP(target, "sensorValueType", sensorValueTypes);
+    ADD_ENUM_MAP(target, "method", methods);
+    ADD_ENUM_MAP(target, "errorCode", errorCodes);
   }
   NODE_MODULE(jontelldus, Init)
 }

@@ -13,7 +13,7 @@ namespace JonTelldus {
 
   class GetDevicesWorker : public Nan::AsyncWorker {
     private:		
-      std::list<Device*> _devices;
+      std::vector<Device*> _devices;
     public:
       GetDevicesWorker(Nan::Callback *callback);
       void Execute();
