@@ -77,7 +77,7 @@ namespace JonTelldus {
       delete device;
     };
  
-    v8::Handle<v8::Value> argv[] = {
+    v8::Local<v8::Value> argv[] = {
       ret
     };
     callback->Call(1, argv);

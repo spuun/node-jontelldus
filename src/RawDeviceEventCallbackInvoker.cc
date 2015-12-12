@@ -6,7 +6,7 @@ namespace JonTelldus {
     : CallbackInvoker(callback), data(data_) {
     }
   void RawDeviceEventCallbackInvoker::Execute() {
-    v8::Handle<v8::Value> argv[] = {
+    v8::Local<v8::Value> argv[] = {
       Nan::New<v8::String>(data.c_str()).ToLocalChecked()
     };
     callback->Call(1, argv);

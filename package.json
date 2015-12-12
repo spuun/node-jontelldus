@@ -6,7 +6,7 @@
     "telldus",
     "telldus-core",
     "tellstick",
-		"nexa"
+    "nexa"
   ],
   "author": "Jon Börjesson <jon@spuun.se>",
   "engines": {
@@ -18,8 +18,8 @@
     "install": "node-gyp configure build"
   },
   "repository": {
-		"url": "https://github.com/spuun/node-jontelldus",
-		"type": "git"
+    "url": "https://github.com/spuun/node-jontelldus",
+    "type": "git"
   },
   "os": [
     "darwin",

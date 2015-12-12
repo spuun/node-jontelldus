@@ -24,7 +24,7 @@ namespace JonTelldus {
     if (callback == 0) {
       return;
     }
-    v8::Handle<v8::Value> argv[] = {
+    v8::Local<v8::Value> argv[] = {
       Nan::Null(),
       Nan::New<v8::Number>(device.id)
     };

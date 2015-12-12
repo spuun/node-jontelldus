@@ -28,7 +28,7 @@ namespace JonTelldus {
     Set(eventObj, "value", value.c_str());
     Set(eventObj, "timestamp", Nan::New<v8::Date>((double)timestamp).ToLocalChecked());
 
-    v8::Handle<v8::Value> argv[] = {
+    v8::Local<v8::Value> argv[] = {
       eventObj
     };
     callback->Call(1, argv);

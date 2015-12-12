@@ -173,7 +173,7 @@ namespace JonTelldus {
     }
     if (tdid == 0) {
       if (callback != 0){
-        v8::Handle<v8::Value> argv[] =  {
+        v8::Local<v8::Value> argv[] =  {
           Nan::Error("Listener is not registered")
         };
         callback->Call(1, argv);
