@@ -44,6 +44,11 @@ namespace JonTelldus {
     ("Down", TELLSTICK_DOWN)
     ("Stop", TELLSTICK_STOP);
 
+  jenum deviceTypes = create_jenum
+    ("Device", TELLSTICK_TYPE_DEVICE)
+    ("Group", TELLSTICK_TYPE_GROUP)
+    ("Scene", TELLSTICK_TYPE_SCENE);
+
   jenum sensorValueTypes = create_jenum
     ("Temperature", TELLSTICK_TEMPERATURE)
     ("Humidity", TELLSTICK_HUMIDITY)

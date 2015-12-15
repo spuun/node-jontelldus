@@ -56,6 +56,7 @@ namespace JonTelldus {
   extern jenum sensorValueTypes;
   extern jenum methods;
   extern jenum errorCodes;
+  extern jenum deviceTypes;
   extern jstrarray deviceParameterNames;
 
   inline extern

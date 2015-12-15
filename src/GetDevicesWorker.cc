@@ -2,9 +2,9 @@
 
 #include <telldus-core.h>
 #include <algorithm>
+#include <functional>
 
 namespace JonTelldus {
-
   GetDevicesWorker::GetDevicesWorker(Nan::Callback *callback)
     : Nan::AsyncWorker(callback) {};
 
@@ -29,6 +29,15 @@ namespace JonTelldus {
       tdReleaseString(name);
       tdReleaseString(protocol);
       tdReleaseString(model);
+
+      device->type = "Unknown";
+      int type = tdGetDeviceType(device->id);
+      jenum::const_iterator typeIt;
+      for (typeIt = deviceTypes.begin(); typeIt != deviceTypes.end(); ++typeIt) {
+        if (typeIt->second == type) {
+          device->type = typeIt->first; 
+        }
+      }
 
       for (jstrarray::iterator name = deviceParameterNames.begin();
           name != deviceParameterNames.end(); ++name) {
@@ -61,6 +70,7 @@ namespace JonTelldus {
       Set(deviceObj, "name", device->name.c_str());
       Set(deviceObj, "protocol", device->protocol.c_str());
       Set(deviceObj, "model", device->model.c_str());
+      Set(deviceObj, "type", device->type.c_str());
 
       v8::Local<v8::Object> paramObj = Nan::New<v8::Object>();
       std::map<std::string, std::string>::iterator it;
@@ -76,7 +86,7 @@ namespace JonTelldus {
       Set(ret, ret->Length(), deviceObj);
       delete device;
     };
- 
+
     v8::Local<v8::Value> argv[] = {
       ret
     };

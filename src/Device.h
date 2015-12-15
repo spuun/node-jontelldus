@@ -16,6 +16,7 @@ namespace JonTelldus {
       std::string name;
       std::string model;
       std::string protocol;
+      std::string type;
       std::map<std::string, std::string> parameters;
       jstrarray methods;
      
