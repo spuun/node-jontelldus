@@ -6,8 +6,9 @@ before_install:
   - sudo apt-get install -y libftdi1 libftdi-dev libconfuse0 libconfuse-dev
   - wget http://download.telldus.se/TellStick/Software/telldus-core/telldus-core-2.1.2.tar.gz -O /tmp/telldus-core.tar.gz
   - tar -C /tmp -xvf /tmp/telldus-core.tar.gz
-  - cd /tmp/telldus-core-2.1.2 && cmake . && make
-  - sudo make install
+  - cmake /tmp/telldus-core-2.1.2
+  - make -C /tmp/telldus-core-2.1.2
+  - sudo make -C /tmp/telldus-core-2.1.2 install
 notifications:
   email:
     - jon@spuun.se
