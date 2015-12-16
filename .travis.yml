@@ -10,6 +10,9 @@ addons:
       - libftdi-dev
       - libconfuse0
       - libconfuse-dev
+      - g++-4.8
+compiler:
+  - g++-4.8
 notifications:
   email:
     - jon@spuun.se
