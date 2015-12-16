@@ -1,10 +1,12 @@
 language: node_js
 node_js:
-    - 0.8
-    - 0.10
-    - 0.12
-    - 4
-    - 5
+  - 0.8
+  - 0.10
+  - 0.12  
+  - 4
+  - 5
+before_install:
+  - "curl -O http://download.telldus.se/TellStick/Software/telldus-core/telldus-core-2.1.2.tar.gz && gunzip telldus-core-2.1.2.tar.gz && tar -xvf telldus-core-2.1.2.tar && cd telldus-core-2.1.2 && cmake . && make"
 notifications:
   email:
     - jon@spuun.se
