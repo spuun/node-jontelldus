@@ -2,7 +2,14 @@ language: node_js
 node_js:
   - 0.8
 before_install:
-  - "./travis-setup.sh"
+  - "sudo ./travis-setup.sh"
+addons:
+  apt:
+    packages:
+      - libftdi1
+      - libftdi-dev
+      - libconfuse0
+      - libconfuse-dev
 notifications:
   email:
     - jon@spuun.se
