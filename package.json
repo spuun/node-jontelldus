@@ -15,7 +15,8 @@
   "license": "MIT",
   "main": "./index.js",
   "scripts": {
-    "install": "node-gyp configure build"
+    "install": "node-gyp configure build",
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "url": "https://github.com/spuun/node-jontelldus",
@@ -28,5 +29,8 @@
   ],
   "dependencies": {
     "nan": "^2.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4"
   }
 }

@@ -1,23 +1,22 @@
 #include "ListenerRegister.h"
 
 namespace JonTelldus {
-  void ListenerRegister::Register(Nan::Callback *cb, int tdid) {
-    this->Register(cb->GetFunction(), tdid);
+  void ListenerRegister::Register(Nan::Callback *cb, const ListenerInfo& info) {
+    this->Register(cb->GetFunction(), info);
   }
-  int ListenerRegister::UnRegister(Nan::Callback *cb) {
+  ListenerInfo ListenerRegister::UnRegister(Nan::Callback *cb) {
     return this->UnRegister(cb->GetFunction());
   }
-  void ListenerRegister::Register(v8::Local<v8::Function> func, int tdid) {
-    listeners[func->GetIdentityHash()] = tdid;
+  void ListenerRegister::Register(v8::Local<v8::Function> func, const ListenerInfo& info) {
+    listeners[func->GetIdentityHash()] = info;
   }
-  int ListenerRegister::UnRegister(v8::Local<v8::Function> func) {
-    std::map<int,int>::iterator it = listeners.find(func->GetIdentityHash());
+  ListenerInfo ListenerRegister::UnRegister(v8::Local<v8::Function> func) {
+    std::map<int,ListenerInfo>::iterator it = listeners.find(func->GetIdentityHash());
     if (it == listeners.end()) {
-      return 0;
+      return ListenerInfo();
     }
-    int tdid = it->second;
+    ListenerInfo info = it->second;
     listeners.erase(it);
-    return tdid;
+    return info;
   }
-
 }

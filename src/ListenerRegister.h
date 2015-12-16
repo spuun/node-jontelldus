@@ -3,6 +3,7 @@
 
 #include "JonTelldus.h"
 #include "Singleton.h"
+#include "ListenerInfo.h"
 #include <map>
 
 namespace JonTelldus {
@@ -13,12 +14,12 @@ namespace JonTelldus {
   class ListenerRegister
   {
     private:
-      std::map<int, int> listeners;
+      std::map<int, ListenerInfo> listeners;
     public:
-      void Register(Nan::Callback*, int);
-      void Register(v8::Local<v8::Function>, int);
-      int UnRegister(Nan::Callback*);
-      int UnRegister(v8::Local<v8::Function>);
+      void Register(Nan::Callback*, const ListenerInfo&);
+      void Register(v8::Local<v8::Function>, const ListenerInfo&);
+      ListenerInfo UnRegister(Nan::Callback*);
+      ListenerInfo UnRegister(v8::Local<v8::Function>);
   };
 }
 #endif

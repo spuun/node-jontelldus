@@ -121,7 +121,7 @@ namespace JonTelldus {
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Device>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    reg.Register(callback, tdRegisterDeviceEvent(&deviceEventCallback, callback));
+    reg.Register(callback, ListenerInfo(tdRegisterDeviceEvent(&deviceEventCallback, callback), callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
   void sensorEventCallback(
@@ -144,7 +144,7 @@ namespace JonTelldus {
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Sensor>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    reg.Register(callback, tdRegisterSensorEvent(&sensorEventCallback, callback));
+    reg.Register(callback, ListenerInfo(tdRegisterSensorEvent(&sensorEventCallback, callback), callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
@@ -160,7 +160,7 @@ namespace JonTelldus {
     }
     ListenerRegister& reg = Singleton<ListenerRegister, Raw>::getInstance();
     Nan::Callback *callback = new Nan::Callback(info[0].As<v8::Function>());
-    reg.Register(callback, tdRegisterRawDeviceEvent(&rawDeviceEventCallback, callback));
+    reg.Register(callback, ListenerInfo(tdRegisterRawDeviceEvent(&rawDeviceEventCallback, callback), callback));
     info.GetReturnValue().Set(Nan::Undefined());
   }
 
@@ -171,12 +171,12 @@ namespace JonTelldus {
     }
     info.GetReturnValue().Set(Nan::Undefined());
     
-    int tdid = reg.UnRegister(info[0].As<v8::Function>());
+    ListenerInfo linfo = reg.UnRegister(info[0].As<v8::Function>());
     Nan::Callback *callback = static_cast<Nan::Callback *>(0);
     if (info.Length() > 1 && info[1]->IsFunction()) {
       callback = new Nan::Callback(info[1].As<v8::Function>());
     }
-    if (tdid == 0) {
+    if (linfo.tdid == 0) {
       if (callback != 0){
         v8::Local<v8::Value> argv[] =  {
           Nan::Error("Listener is not registered")
@@ -185,7 +185,7 @@ namespace JonTelldus {
       }
       return;
     }
-    Nan::AsyncQueueWorker(new RemoveListenerWorker(callback, tdid));
+    Nan::AsyncQueueWorker(new RemoveListenerWorker(callback, linfo));
   }
 
   NAN_METHOD(removeRawDeviceEventListener) {
