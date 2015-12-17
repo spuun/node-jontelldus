@@ -1,6 +1,6 @@
 {
   "name": "jontelldus",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Node wrapper for telldus-core",
   "keywords": [
     "telldus",
