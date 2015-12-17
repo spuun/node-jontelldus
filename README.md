@@ -1,7 +1,10 @@
 # node-jontelldus
 Telldus-core wrapper.
 
-Under development, poorly tested. I've used node 5.1.0.
+Under development, poorly tested. I've used node 5.1.0, [but it should compile with node 0.12 and 4 aswell](https://travis-ci.org/spuun/node-jontelldus).
+
+## Requirements
+Telldus-core must be installed.
 
 ## Methods
 | method | description |

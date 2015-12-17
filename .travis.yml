@@ -4,7 +4,7 @@ node_js:
   - "4"
   - "5"
 before_install:
-  - "sudo ./travis-setup.sh"
+  - "sudo ./install-telldus.sh"
 env:
   - CXX=g++-4.8
 addons:
