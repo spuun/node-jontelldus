@@ -9,26 +9,26 @@ Telldus-core must be installed.
 ## Methods
 | method | description |
 |--------|-------------|
-| [getDevices](#user-content-getdevices)(callback(devices)) | get all devices |
-| [addDevice](#user-content-adddevice)(deviceConfiguration, callback(deviceId) | add a new device |
-| [removeDevice](#user-content-removedevice)(deviceId, callback(err)) | remove a device |
-| [updateDevice](#user-content-updatedevice)(deviceConfiguration, callback(err, deviceId)) | update a device |
-| [turnOn](#user-content-turnon)(deviceId, callback(error)) | send on command to device | 
-| [turnOff](#user-content-turnoff)(deviceId, callback(error)) | send off command to device |
-| [up](#user-content-up)(deviceId, callback(error)) | send up command to device |
-| [down](#user-content-down)(deviceId, callback(error)) | send down command to device |
-| [dim](#user-content-dim)(deviceId, level, callback(error)) | send dim command to device |
-| [bell](#user-content-bell)(deviceId, callback(error)) | send bell command to device |
-| [execute](#user-content-execute)(deviceId, callback(error)) | send execute command to device |
-| [stop](#user-content-stop)(deviceId, callback(error)) | send stop command to device |
-| [learn](#user-content-learn)(deviceId, callback(error)) | send learn command for device |
-| [addRawDeviceEventListener](#user-content-addrawdeviceeventlistener--removerawdeviceeventlistener)(listener(data)) | add a raw device event listener |
-| [addSensorEventListener](#user-content-addsensoreventlistener--removesensoreventlistener)(listener(sensorEventData)) | add a sensor event listener |
-| [addDeviceEventListener](#user-content-adddeviceeventlistener--removedeviceeventlistener)(listener(deviceEventData)) | add a device event listener |
-| [removeRawDeviceEventListener](#user-content-addrawdeviceeventlistener--removerawdeviceeventlistener)(listener, callback(err)) | remove a raw device event listener |
-| [removeDeviceEventListener](#user-content-adddeviceeventlistener--removedeviceeventlistener)(listener, callback(err)) | remove a device event listener |
-| [removeSensorEventListener](#user-content-addsensoreventlistener--sensordeviceeventlistener)(listener, callback(err)) | remove a sensor event listener |
-| [sendRawCommand](#user-content-sendrawcommand)(command, callback(error)) | send raw device command |
+| [getDevices](#getdevices)(callback(devices)) | get all devices |
+| [addDevice](#adddevice)(deviceConfiguration, callback(deviceId) | add a new device |
+| [removeDevice](#removedevice)(deviceId, callback(err)) | remove a device |
+| [updateDevice](#updatedevice)(deviceConfiguration, callback(err, deviceId)) | update a device |
+| [turnOn](#turnon)(deviceId, callback(error)) | send on command to device | 
+| [turnOff](#turnoff)(deviceId, callback(error)) | send off command to device |
+| [up](#up)(deviceId, callback(error)) | send up command to device |
+| [down](#down)(deviceId, callback(error)) | send down command to device |
+| [dim](#dim)(deviceId, level, callback(error)) | send dim command to device |
+| [bell](#bell)(deviceId, callback(error)) | send bell command to device |
+| [execute](#execute)(deviceId, callback(error)) | send execute command to device |
+| [stop](#stop)(deviceId, callback(error)) | send stop command to device |
+| [learn](#learn)(deviceId, callback(error)) | send learn command for device |
+| [addRawDeviceEventListener](#addrawdeviceeventlistener--removerawdeviceeventlistener)(listener(data)) | add a raw device event listener |
+| [addSensorEventListener](#addsensoreventlistener--removesensoreventlistener)(listener(sensorEventData)) | add a sensor event listener |
+| [addDeviceEventListener](#adddeviceeventlistener--removedeviceeventlistener)(listener(deviceEventData)) | add a device event listener |
+| [removeRawDeviceEventListener](#addrawdeviceeventlistener--removerawdeviceeventlistener)(listener, callback(err)) | remove a raw device event listener |
+| [removeDeviceEventListener](#adddeviceeventlistener--removedeviceeventlistener)(listener, callback(err)) | remove a device event listener |
+| [removeSensorEventListener](#addsensoreventlistener--sensordeviceeventlistener)(listener, callback(err)) | remove a sensor event listener |
+| [sendRawCommand](#sendrawcommand)(command, callback(error)) | send raw device command |
 
 
 ## Properties
@@ -198,7 +198,7 @@ jtelldus.addRawDeviceEventListener(listener);
 jtelldus.removeRawDeviceEventListener(listener);
 ```
 
-### addSensorEventListener / removeSensorEventListsner
+### addSensorEventListener / removeSensorEventListener
 ```javascript
 var jtelldus = require('jontelldus');
 var listener = (event) => {
