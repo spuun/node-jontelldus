@@ -15,7 +15,7 @@ namespace JonTelldus {
       virtual void Execute() = 0;
       void Destroy();
 
-      uv_work_t request;
+      uv_async_t request;
   };
 
   void QueueCallback(CallbackInvoker* invoker);

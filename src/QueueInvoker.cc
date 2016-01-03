@@ -13,21 +13,17 @@ namespace JonTelldus {
     delete this;
   }
 
-  void QueueInvokeNop(uv_work_t *request) {}
+  void QueueInvokeNop(uv_async_t *request) {}
 
-  void QueueCallbackInvoke (uv_work_t* req, int status) {
+  void QueueCallbackInvoke (uv_async_t* req) {
     CallbackInvoker* worker = static_cast<CallbackInvoker*>(req->data);
     worker->Invoke();
     worker->Destroy();
   }
 
   void QueueCallback(CallbackInvoker* invoker) {
-    uv_queue_work(
-        uv_default_loop(),
-        &(invoker->request),
-        QueueInvokeNop,
-        reinterpret_cast<uv_after_work_cb>(QueueCallbackInvoke)
-        );
+    uv_async_init(uv_default_loop(), &(invoker->request), reinterpret_cast<uv_async_cb>(QueueCallbackInvoke));
+    uv_async_send(&(invoker->request));
   }
 
 }
