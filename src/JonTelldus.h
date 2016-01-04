@@ -10,6 +10,8 @@
 #include <vector>
 #include <string>
 
+#include "Mutex.h"
+
 namespace JonTelldus {
 
   template<typename K, typename V>
@@ -58,6 +60,7 @@ namespace JonTelldus {
   extern jenum errorCodes;
   extern jenum deviceTypes;
   extern jstrarray deviceParameterNames;
+  extern Mutex mutex;
 
   inline extern
   Nan::Maybe<bool> Set(

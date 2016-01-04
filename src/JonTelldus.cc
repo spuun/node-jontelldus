@@ -72,6 +72,8 @@ namespace JonTelldus {
     ("CommunicatingService", TELLSTICK_ERROR_COMMUNICATING_SERVICE)
     ("Unknown", TELLSTICK_ERROR_UNKNOWN);
 
+  Mutex mutex = Mutex();
+
   #define ADD_ENUM_MAP(target, name, values)\
   {\
     v8::Local<v8::Object> enumObj = Nan::New<v8::Object>();\
@@ -289,7 +291,9 @@ namespace JonTelldus {
   INT_ID_METHOD(learn, tdLearn);
 
   NAN_MODULE_INIT(Init) {
+    mutex.Lock();
     tdInit();
+    mutex.UnLock();
     ADD_METHOD(target, getDevices);
     ADD_METHOD(target, turnOn);
     ADD_METHOD(target, turnOff);

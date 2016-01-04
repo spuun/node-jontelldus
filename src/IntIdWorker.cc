@@ -5,6 +5,7 @@ namespace JonTelldus {
     : WorkerBase(callback), fn(fn_), id(id_) {}
 
   void IntIdWorker::Execute() {
+    mutex.Lock();
     int result = fn(id);
     if (result == TELLSTICK_SUCCESS) {
       return;
@@ -12,5 +13,6 @@ namespace JonTelldus {
     char * error = tdGetErrorString(result);
     this->SetErrorMessage(error);
     tdReleaseString(error);
+    mutex.UnLock();
   }
 }

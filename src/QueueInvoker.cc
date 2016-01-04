@@ -10,6 +10,7 @@ namespace JonTelldus {
     this->Execute();
   }
   void CallbackInvoker::Destroy() {
+    uv_close((uv_handle_t*) &request, 0);
     delete this;
   }
 

@@ -4,6 +4,7 @@
     "target_name": "jontelldus",
     "sources": [ 
   		"src/JonTelldus.cc",
+      "src/Mutex.cc",
       "src/ListenerRegister.cc",
       "src/WorkerBase.cc",
       "src/QueueInvoker.cc",
