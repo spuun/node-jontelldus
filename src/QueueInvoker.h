@@ -14,6 +14,7 @@ namespace JonTelldus {
       void Invoke(); 
       virtual void Execute() = 0;
       void Destroy();
+      void DestroyFinal();
 
       uv_async_t request;
   };
