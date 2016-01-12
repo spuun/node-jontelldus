@@ -8,6 +8,7 @@ namespace JonTelldus {
     mutex.Lock();
     int result = fn(id);
     if (result == TELLSTICK_SUCCESS) {
+      mutex.UnLock();
       return;
     }
     char * error = tdGetErrorString(result);
