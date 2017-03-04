@@ -11,8 +11,6 @@
 namespace JonTelldus {
 
 class AddDeviceWorker : public UpdateDeviceWorker {
-  private:
-    int deviceId;
   public:
     AddDeviceWorker(Nan::Callback *callback, const Device& device);
       
