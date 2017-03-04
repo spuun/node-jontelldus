@@ -8,6 +8,7 @@ namespace JonTelldus {
     private:
       uv_mutex_t mutex;
     public:
+      Mutex();
       void Lock();
       void UnLock();
   };
